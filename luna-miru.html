@@ -321,6 +321,12 @@ textarea.field{font-family:inherit;font-size:18px;font-weight:700;resize:vertica
   background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer;z-index:1}
 .undo{position:relative;z-index:3;display:block;margin:7px 0 0 auto;border:0;background:#EAF0F6;
   color:var(--soft);font-family:inherit;font-weight:800;font-size:13px;padding:7px 12px;border-radius:99px;cursor:pointer}
+.schacts{display:flex;flex-direction:column;gap:6px;align-items:flex-end;margin-top:8px}
+.mini{position:relative;z-index:3;border:0;font-family:inherit;font-weight:800;font-size:13px;
+  padding:8px 13px;border-radius:99px;cursor:pointer;white-space:nowrap}
+.mini:active{transform:scale(.94)}
+.mini.m-undo{background:#EAF0F6;color:var(--soft)}
+.mini.m-del{background:#FFECEC;color:var(--coral)}
 .schnote{font-size:14.5px;color:var(--soft);margin:-4px 0 12px;line-height:1.6}
 .sch li{gap:10px}
 .schchk{position:relative;z-index:2;flex:none;align-self:center;width:46px;height:46px;border-radius:14px;
@@ -528,8 +534,13 @@ textarea.field{font-family:inherit;font-size:18px;font-weight:700;resize:vertica
 
     <div class="card">
       <h2><span class="dot" style="background:var(--pink)"></span>これからの よてい</h2>
-      <p class="schnote">✎ のついた行をタップすると、カレンダーが出て日にちを変えられます。</p>
+      <p class="schnote">✎ のついた行をタップすると日にちを変えられます。左のチェックで「すんだ」、右の「けす」でリストから外せます。</p>
       <ul class="sch" id="sch"></ul>
+    </div>
+
+    <div class="card hidden" id="hiddenCard">
+      <h2><span class="dot" style="background:var(--soft)"></span>かくした よてい</h2>
+      <ul class="sch" id="hiddenList"></ul>
     </div>
 
     <div class="law">
@@ -621,7 +632,7 @@ const HOME='2026-07-31', INS='2026-09-01';
 const PL={good:['ふつう','#0E9E80'],soft:['やわらかい','#E09400'],loose:['げり','#E5701B'],bad:['血・黒い','#E03A3F']};
 
 const blank=(n,bd)=>({name:n,birthday:bd,vaccine:'2026-08-23',home:HOME,photo:'',days:{},weights:[]});
-let D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},cfg:{url:'',who:''},sent:{},v:9};
+let D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},hide:{},cfg:{url:'',who:''},sent:{},v:10};
 let calY,calM,selDate=null,editId=null,photoTarget=0;
 
 const $=id=>document.getElementById(id);
@@ -1015,7 +1026,7 @@ function paintHist(){
 function ovr(id,def){return (D.ovr&&D.ovr[id])||def}
 function dkey(e){return e.fixed?e.id:('ev-'+e.id)}
 function isDone(k){return !!(D.done&&D.done[k])}
-function autoEvents(){
+function autoEvents(all){
   const out=[];
   D.dogs.forEach((g,i)=>{
     const c=COLORS[i];
@@ -1032,7 +1043,7 @@ function autoEvents(){
     }
   });
   out.push({id:'ins',date:ovr('ins',INS),title:'保険の補償かいし',who:-1,color:'#0E9E80',fixed:true,note:'それまでは無保険です'});
-  return out;
+  return all?out:out.filter(e=>!(D.hide&&D.hide[e.id]));
 }
 function birthdaysOn(ds){
   const [y,m,d]=ds.split('-').map(Number), out=[];
@@ -1192,13 +1203,50 @@ function paintSch(){
       inp.setAttribute('aria-label',it.t+' の日にちを変える');
       inp.onchange=()=>setSchDate(it,inp.value);
       li.appendChild(inp);
+      const acts=document.createElement('div'); acts.className='schacts';
       if(D.ovr&&D.ovr[it.id]){
-        const u=document.createElement('button'); u.className='undo'; u.type='button'; u.textContent='もとに戻す';
-        u.onclick=ev=>{ev.stopPropagation();delete D.ovr[it.id];save();paintCal();paintEvDay();paintSch()};
-        li.querySelector('.cnt').appendChild(u);
+        const u=document.createElement('button'); u.className='mini m-undo'; u.type='button'; u.textContent='日にちを戻す';
+        u.onclick=ev=>{ev.preventDefault();ev.stopPropagation();delete D.ovr[it.id];save();paintCal();paintEvDay();paintSch()};
+        acts.appendChild(u);
       }
+      const dl=document.createElement('button'); dl.className='mini m-del'; dl.type='button'; dl.textContent='けす';
+      dl.setAttribute('aria-label',it.t+' を けす');
+      dl.onclick=ev=>{
+        ev.preventDefault(); ev.stopPropagation();
+        if(it.src==='user'){
+          if(!confirm(`「${it.t}」を けしますか？`))return;
+          D.events=D.events.filter(x=>x.id!==it.evid);
+          if(D.done)delete D.done[it.id];
+        }else{
+          if(!confirm(`「${it.t}」を リストから けしますか？\nあとで「かくした よてい」から もどせます。`))return;
+          D.hide=D.hide||{}; D.hide[it.id]=1;
+        }
+        save(); paintSch(); paintHidden(); paintCal(); paintEvDay();
+      };
+      acts.appendChild(dl);
+      li.querySelector('.cnt').appendChild(acts);
     }
     ul.appendChild(li);
+  });
+}
+
+function paintHidden(){
+  const card=$('hiddenCard'), ul=$('hiddenList');
+  const ids=Object.keys(D.hide||{});
+  const all=autoEvents(true);
+  const list=ids.map(id=>all.find(e=>e.id===id)).filter(Boolean);
+  if(!list.length){card.classList.add('hidden'); ul.innerHTML=''; return;}
+  card.classList.remove('hidden'); ul.innerHTML='';
+  list.forEach(e=>{
+    const d=dstr(e.date);
+    const li=document.createElement('li');
+    li.innerHTML=`<span class="bar" style="background:${e.color}"></span>
+      <div style="flex:1"><p class="ti">${esc(e.title+(e.who>=0?`（${D.dogs[e.who].name}）`:''))}</p>
+      <p class="de">${d.getMonth()+1}月${d.getDate()}日ごろ</p></div>`;
+    const c=document.createElement('div'); c.className='cnt';
+    const b=document.createElement('button'); b.className='mini m-undo'; b.type='button'; b.textContent='もどす';
+    b.onclick=()=>{delete D.hide[e.id];save();paintSch();paintHidden();paintCal();paintEvDay()};
+    c.appendChild(b); li.appendChild(c); ul.appendChild(li);
   });
 }
 
@@ -1251,6 +1299,7 @@ $('impIn').onchange=e=>{
       D.events=Array.isArray(o.events)?o.events:[];
       D.ovr=o.ovr||{};
       D.done=o.done||{};
+      D.hide=o.hide||{};
       D.cfg=o.cfg||D.cfg;
       save(); render(); toast('読みこみました');
     }catch(err){ toast('このファイルは読みこめません'); }
@@ -1289,7 +1338,7 @@ $('photoIn').onchange=e=>{
 $('resetBtn').onclick=()=>{
   if(!confirm('2匹ぶんすべての記録・写真・よていを消します。もとに戻せません。'))return;
   const cfg=D.cfg;
-  D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},cfg,sent:{},v:9};
+  D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},hide:{},cfg,sent:{},v:10};
   save(); render(); toast('消しました');
 };
 document.querySelectorAll('.tab').forEach(t=>{
@@ -1344,7 +1393,7 @@ function render(){
   poops(); memos(); brSetup(); paintBreath();
   wInputs(); paintWeight(); paintHist(); profile();
   $('cfgUrl').value=D.cfg.url||''; $('cfgWho').value=D.cfg.who||'';
-  paintHero(); paintCal(); paintEvDay(); paintSch(); paintCfg(); paintWarn(); maybeDaily();
+  paintHero(); paintCal(); paintEvDay(); paintSch(); paintHidden(); paintCfg(); paintWarn(); maybeDaily();
 }
 (async()=>{
   const s=await store.get();
@@ -1353,6 +1402,7 @@ function render(){
     D.events=Array.isArray(s.events)?s.events:[];
     D.ovr=s.ovr||{};
     D.done=s.done||{};
+    D.hide=s.hide||{};
     D.cfg=Object.assign({url:'',who:''},s.cfg||{});
     D.sent=s.sent||{};
     if((s.v||0)<4){ D.dogs.forEach((g,i)=>{ if(DEF[i]){g.birthday=DEF[i].b;} if(!g.home)g.home=HOME; }); save(); }
