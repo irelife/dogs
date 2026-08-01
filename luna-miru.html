@@ -632,7 +632,7 @@ const HOME='2026-07-31', INS='2026-09-01';
 const PL={good:['ふつう','#0E9E80'],soft:['やわらかい','#E09400'],loose:['げり','#E5701B'],bad:['血・黒い','#E03A3F']};
 
 const blank=(n,bd)=>({name:n,birthday:bd,vaccine:'2026-08-23',home:HOME,photo:'',days:{},weights:[]});
-let D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},hide:{},cfg:{url:'',who:''},sent:{},v:10};
+let D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},hide:{},notice:'',cfg:{url:'',who:''},sent:{},v:11};
 let calY,calM,selDate=null,editId=null,photoTarget=0;
 
 const $=id=>document.getElementById(id);
@@ -1300,6 +1300,7 @@ $('impIn').onchange=e=>{
       D.ovr=o.ovr||{};
       D.done=o.done||{};
       D.hide=o.hide||{};
+      D.notice=o.notice||'';
       D.cfg=o.cfg||D.cfg;
       save(); render(); toast('読みこみました');
     }catch(err){ toast('このファイルは読みこめません'); }
@@ -1338,7 +1339,7 @@ $('photoIn').onchange=e=>{
 $('resetBtn').onclick=()=>{
   if(!confirm('2匹ぶんすべての記録・写真・よていを消します。もとに戻せません。'))return;
   const cfg=D.cfg;
-  D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},hide:{},cfg,sent:{},v:10};
+  D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},hide:{},notice:'',cfg,sent:{},v:11};
   save(); render(); toast('消しました');
 };
 document.querySelectorAll('.tab').forEach(t=>{
@@ -1350,8 +1351,8 @@ document.querySelectorAll('.tab').forEach(t=>{
   };
 });
 /* ---------- 起動時のおしらせ ---------- */
-let noticeDay='';
-function showNotice(){
+function showNotice(force){
+  if(!force && D.notice===todayKey())return;
   const now=new Date(); now.setHours(0,0,0,0);
   const items=schItems().filter(i=>{
     if(i.id&&isDone(i.id))return false;
@@ -1374,7 +1375,7 @@ function showNotice(){
       ul.appendChild(li);
     });
   }
-  noticeDay=todayKey();
+  D.notice=todayKey(); save();
   $('todayModal').classList.remove('hidden');
 }
 $('mOk').onclick=()=>$('todayModal').classList.add('hidden');
@@ -1383,7 +1384,7 @@ $('todayModal').onclick=e=>{ if(e.target===$('todayModal'))$('todayModal').class
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible'){
     paintWarn(); maybeDaily();
-    if(noticeDay&&noticeDay!==todayKey()){paintSch();showNotice();}
+    if(D.notice!==todayKey()){paintSch();showNotice();}
   }
 });
 
@@ -1403,6 +1404,7 @@ function render(){
     D.ovr=s.ovr||{};
     D.done=s.done||{};
     D.hide=s.hide||{};
+    D.notice=s.notice||'';
     D.cfg=Object.assign({url:'',who:''},s.cfg||{});
     D.sent=s.sent||{};
     if((s.v||0)<4){ D.dogs.forEach((g,i)=>{ if(DEF[i]){g.birthday=DEF[i].b;} if(!g.home)g.home=HOME; }); save(); }
