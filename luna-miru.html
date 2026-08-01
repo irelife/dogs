@@ -738,7 +738,7 @@ function dailyText(){
   return s;
 }
 function maybeDaily(){
-  if(new Date().getHours()<21)return;
+  if(new Date().getHours()<20)return;
   once('daily',dailyText(),false);
 }
 
