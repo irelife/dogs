@@ -4,213 +4,242 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#EAF4FF">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ルナとミル">
 <title>ルナとミルの健康手帳</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --sky:#EAF4FF; --card:#FFFFFF; --ink:#16324F; --soft:#7C97B2; --line:#DCE9F7;
-  --pink:#FF6FA5; --blue:#33B3F5; --mint:#1FC9A4; --sun:#FFC93C; --coral:#FF5A5F; --lav:#9B8CFF;
-  --me:#FF6FA5; --r:22px;
+  --sky:#EAF4FF; --card:#FFFFFF; --ink:#0F2942; --soft:#5C7A96; --line:#C9DDF0;
+  --pink:#E8437F; --blue:#0E8FD8; --mint:#0E9E80; --sun:#E09400; --coral:#E03A3F; --lav:#6B5CE7;
+  --me:#E8437F; --r:20px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{background:var(--sky);color:var(--ink);font-family:'M PLUS Rounded 1c',system-ui,sans-serif;
-  font-weight:500;padding:0 0 96px;-webkit-font-smoothing:antialiased}
-.wrap{max-width:520px;margin:0 auto;padding:0 16px}
+  font-weight:700;font-size:18px;padding:0 0 110px;-webkit-font-smoothing:antialiased;
+  text-size-adjust:100%;-webkit-text-size-adjust:100%}
+.wrap{max-width:560px;margin:0 auto;padding:0 14px}
 .num{font-family:'Outfit',sans-serif;font-weight:800;font-variant-numeric:tabular-nums}
 
-.dogs{display:flex;gap:9px;padding:16px 0 4px}
-.dogbtn{flex:1;display:flex;align-items:center;gap:9px;border:2px solid var(--line);background:#fff;
-  border-radius:999px;padding:6px 14px 6px 6px;cursor:pointer;font-family:inherit;font-weight:800;
-  font-size:15px;color:var(--soft);transition:transform .12s;overflow:hidden}
+/* ===== 犬の切替 ===== */
+.dogs{display:flex;gap:10px;padding:14px 0 6px}
+.dogbtn{flex:1;display:flex;align-items:center;gap:10px;border:3px solid var(--line);background:#fff;
+  border-radius:999px;padding:8px 16px 8px 8px;cursor:pointer;font-family:inherit;font-weight:800;
+  font-size:21px;color:var(--soft);transition:transform .1s;overflow:hidden;min-height:64px}
 .dogbtn:active{transform:scale(.96)}
-.dogbtn .av{width:34px;height:34px;border-radius:50%;background:#F0F7FF;flex:none;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;font-size:15px;color:#C3D6E8}
+.dogbtn .av{width:46px;height:46px;border-radius:50%;background:#EAF4FF;flex:none;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;font-size:22px}
 .dogbtn .av img{width:100%;height:100%;object-fit:cover;display:block}
 .dogbtn .nmw{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dogbtn .mini{margin-left:auto;font-family:'Outfit';font-size:12px;font-weight:800;flex:none;opacity:.65}
+.dogbtn .mini{margin-left:auto;font-family:'Outfit';font-size:16px;font-weight:800;flex:none;opacity:.75}
 
-.hero{padding:10px 0 6px;text-align:center}
-.hero-age{color:var(--soft);font-size:13px;margin:0 0 12px;font-weight:700}
-.ring-box{position:relative;width:196px;height:196px;margin:0 auto}
+/* ===== ヒーロー ===== */
+.hero{padding:8px 0 4px;text-align:center}
+.hero-age{color:var(--soft);font-size:17px;margin:0 0 10px}
+.ring-box{position:relative;width:190px;height:190px;margin:0 auto}
 .ring-box svg{width:100%;height:100%;transform:rotate(-90deg)}
-.ring-bg{fill:none;stroke:#D6E7F8;stroke-width:13;stroke-linecap:round}
-.ring-fg{fill:none;stroke:url(#g1);stroke-width:13;stroke-linecap:round;
-  transition:stroke-dashoffset .55s cubic-bezier(.34,1.3,.64,1)}
-.photo{position:absolute;inset:22px;border-radius:50%;overflow:hidden;background:#F3F8FF;
+.ring-bg{fill:none;stroke:#CBE0F5;stroke-width:14;stroke-linecap:round}
+.ring-fg{fill:none;stroke:url(#g1);stroke-width:14;stroke-linecap:round;
+  transition:stroke-dashoffset .5s cubic-bezier(.34,1.3,.64,1)}
+.photo{position:absolute;inset:23px;border-radius:50%;overflow:hidden;background:#F0F7FF;
   display:flex;align-items:center;justify-content:center;cursor:pointer;border:0;padding:0;
-  width:calc(100% - 44px);height:calc(100% - 44px)}
+  width:calc(100% - 46px);height:calc(100% - 46px)}
 .photo img{width:100%;height:100%;object-fit:cover;display:block}
-.photo-empty{font-size:12px;color:var(--soft);font-weight:700;line-height:1.7}
-.photo-empty b{display:block;font-size:30px}
-.score{margin:14px 0 0;font-size:14px;font-weight:700;color:var(--soft)}
-.score .num{font-size:30px;color:var(--ink)}
+.photo-empty{font-size:15px;color:var(--soft);font-weight:800;line-height:1.6}
+.photo-empty b{display:block;font-size:34px}
+.score{margin:12px 0 0;font-size:18px;color:var(--soft)}
+.score .num{font-size:36px;color:var(--ink)}
 .all{color:var(--mint)}
-.bday{margin:8px 0 0;font-size:13px;font-weight:800;color:var(--sun)}
+.bday{margin:8px 0 0;font-size:18px;font-weight:800;color:var(--sun)}
 
-.tabs{display:flex;gap:6px;background:#fff;border-radius:999px;padding:5px;margin:20px 0 18px;box-shadow:0 3px 0 var(--line)}
-.tab{flex:1;border:0;background:transparent;padding:11px 0;border-radius:999px;font-family:inherit;
-  font-weight:800;font-size:14px;color:var(--soft);cursor:pointer;transition:background .18s,color .18s}
+/* ===== アラート帯 ===== */
+.warnbox{background:#FFECEC;border:3px solid #FFB9BA;border-radius:var(--r);padding:14px;margin:0 0 12px}
+.warnbox h3{margin:0 0 8px;font-size:18px;color:var(--coral);display:flex;align-items:center;gap:8px}
+.warnbox ul{margin:0;padding-left:22px}
+.warnbox li{font-size:16.5px;line-height:1.7;margin-bottom:5px}
+.warnbox li:last-child{margin-bottom:0}
+
+/* ===== タブ ===== */
+.tabs{display:flex;gap:6px;background:#fff;border-radius:999px;padding:6px;margin:16px 0 16px;
+  box-shadow:0 4px 0 var(--line)}
+.tab{flex:1;border:0;background:transparent;padding:15px 0;border-radius:999px;font-family:inherit;
+  font-weight:800;font-size:18px;color:var(--soft);cursor:pointer;min-height:56px}
 .tab[aria-selected="true"]{background:var(--ink);color:#fff}
 
-.card{background:var(--card);border-radius:var(--r);padding:16px 15px;margin:0 0 14px;box-shadow:0 4px 0 var(--line)}
-.card h2{margin:0 0 12px;font-size:14px;font-weight:800;letter-spacing:.06em;display:flex;align-items:center;gap:8px}
-.dot{width:9px;height:9px;border-radius:50%;flex:none}
-.hint{font-size:11.5px;color:var(--soft);font-weight:700;margin:10px 0 0;line-height:1.65}
+/* ===== カード ===== */
+.card{background:var(--card);border-radius:var(--r);padding:16px 14px;margin:0 0 14px;box-shadow:0 4px 0 var(--line)}
+.card h2{margin:0 0 14px;font-size:19px;font-weight:800;display:flex;align-items:center;gap:9px}
+.dot{width:12px;height:12px;border-radius:50%;flex:none}
+.hint{font-size:15px;color:var(--soft);margin:12px 0 0;line-height:1.75}
+.hint b{color:var(--ink)}
+details.more{margin-top:12px}
+details.more summary{font-size:16px;color:var(--blue);cursor:pointer;padding:10px 0;list-style:none;
+  display:flex;align-items:center;gap:6px}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:'▶';font-size:12px;transition:transform .2s}
+details.more[open] summary::before{transform:rotate(90deg)}
 
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:2px solid var(--line);background:#fff;border-radius:14px;padding:10px 13px;font-family:inherit;
-  font-weight:700;font-size:13.5px;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:7px;
-  transition:transform .12s,background .18s,border-color .18s,color .18s}
-.chip:active{transform:scale(.94)}
-.chip .box{width:17px;height:17px;border-radius:6px;border:2px solid var(--line);flex:none;
-  display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent}
+/* ===== チェック ===== */
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chip{border:3px solid var(--line);background:#fff;border-radius:16px;padding:16px 12px;font-family:inherit;
+  font-weight:800;font-size:18px;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:10px;
+  transition:transform .1s,background .15s,border-color .15s,color .15s;min-height:62px;text-align:left}
+.chip:active{transform:scale(.95)}
+.chip .box{width:26px;height:26px;border-radius:8px;border:3px solid var(--line);flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:16px;color:transparent;font-weight:800}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .chip[aria-pressed="true"] .box{background:var(--mint);border-color:var(--mint);color:#fff}
-.chip.sm{padding:9px 11px;font-size:12.5px}
-.chip.sm .box{width:15px;height:15px}
 
-.meal{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--line)}
+/* ===== ごはん ===== */
+.meal{padding:12px 0;border-bottom:2px dashed var(--line)}
 .meal:last-child{border-bottom:0}
-.meal .when{width:74px;flex:none}
-.meal .when b{display:block;font-size:13.5px;font-weight:800}
-.meal .when span{font-family:'Outfit';font-size:11px;font-weight:700;color:var(--soft)}
-.meal .arrow{color:#C3D6E8;font-size:12px;font-weight:800;flex:none}
+.meal .when{font-size:18px;font-weight:800;margin-bottom:9px;display:flex;align-items:baseline;gap:9px}
+.meal .when span{font-family:'Outfit';font-size:16px;color:var(--soft)}
+.meal .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.seg button{border:2px solid var(--line);background:#fff;border-radius:14px;padding:11px 2px;font-family:inherit;
-  font-weight:800;font-size:12px;color:var(--soft);cursor:pointer;transition:transform .12s}
-.seg button:active{transform:scale(.94)}
+/* ===== うんち ===== */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg button{border:3px solid var(--line);background:#fff;border-radius:16px;padding:18px 6px;font-family:inherit;
+  font-weight:800;font-size:18px;color:var(--ink);cursor:pointer;transition:transform .1s;min-height:64px}
+.seg button:active{transform:scale(.95)}
 .seg button[aria-pressed="true"]{color:#fff}
 .seg button[data-v="good"][aria-pressed="true"]{background:var(--mint);border-color:var(--mint)}
-.seg button[data-v="soft"][aria-pressed="true"]{background:var(--sun);border-color:var(--sun);color:var(--ink)}
-.seg button[data-v="loose"][aria-pressed="true"]{background:#FF9A4D;border-color:#FF9A4D}
+.seg button[data-v="soft"][aria-pressed="true"]{background:var(--sun);border-color:var(--sun)}
+.seg button[data-v="loose"][aria-pressed="true"]{background:#E5701B;border-color:#E5701B}
 .seg button[data-v="bad"][aria-pressed="true"]{background:var(--coral);border-color:var(--coral)}
 
-.row{display:flex;gap:9px;align-items:center}
-.field{flex:1;border:2px solid var(--line);border-radius:14px;padding:12px 13px;font-family:'Outfit',sans-serif;
-  font-weight:700;font-size:19px;color:var(--ink);background:#fff;min-width:0}
-.field.txt{font-family:inherit;font-size:15px;font-weight:700}
-.field.sm{font-size:13px}
+/* ===== 入力 ===== */
+.row{display:flex;gap:10px;align-items:center}
+.field{flex:1;border:3px solid var(--line);border-radius:16px;padding:16px 15px;font-family:'Outfit',sans-serif;
+  font-weight:800;font-size:24px;color:var(--ink);background:#fff;min-width:0;min-height:62px}
+.field.txt{font-family:inherit;font-size:18px}
 .field:focus{outline:none;border-color:var(--lav)}
-select.field{font-family:inherit;font-size:14px;font-weight:800;flex:none;width:96px;padding:12px 8px}
-.unit{font-weight:800;font-size:13px;color:var(--soft);flex:none}
-.btn{border:0;border-radius:14px;padding:13px 18px;font-family:inherit;font-weight:800;font-size:14px;color:#fff;
-  background:var(--ink);cursor:pointer;flex:none;box-shadow:0 3px 0 rgba(22,50,79,.28);transition:transform .12s}
-.btn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(22,50,79,.28)}
-.btn.me{background:var(--me);box-shadow:0 3px 0 rgba(0,0,0,.16)}
-.btn.ghost{background:#fff;color:var(--soft);box-shadow:0 3px 0 var(--line)}
+select.field{font-family:inherit;font-size:18px;flex:none;width:120px;padding:16px 10px}
+.unit{font-weight:800;font-size:17px;color:var(--soft);flex:none}
+.btn{border:0;border-radius:16px;padding:17px 22px;font-family:inherit;font-weight:800;font-size:18px;color:#fff;
+  background:var(--ink);cursor:pointer;flex:none;box-shadow:0 4px 0 rgba(15,41,66,.3);transition:transform .1s;min-height:62px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(15,41,66,.3)}
+.btn.me{background:var(--me);box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.btn.ghost{background:#fff;color:var(--soft);box-shadow:0 4px 0 var(--line)}
 .btn.wide{width:100%}
-textarea.field{font-family:inherit;font-size:14px;font-weight:500;resize:vertical;min-height:66px;width:100%}
+textarea.field{font-family:inherit;font-size:18px;font-weight:700;resize:vertical;min-height:96px;width:100%;line-height:1.6}
 
-.sw{text-align:center;padding:6px 0 2px}
-.sw-sec{font-size:15px;font-weight:800;color:var(--soft);margin-bottom:10px}
-.sw-sec .num{font-size:40px;color:var(--ink)}
-.tapbig{width:100%;border:0;border-radius:20px;background:var(--me);color:#fff;padding:26px 0;cursor:pointer;
-  font-family:inherit;box-shadow:0 5px 0 rgba(0,0,0,.16);transition:transform .08s}
-.tapbig:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.16)}
-.tapbig .num{display:block;font-size:52px;line-height:1}
-.tapbig small{font-size:12px;font-weight:800;opacity:.85}
-.breath-out{text-align:center;padding:14px;border-radius:16px;background:#F5FAFF;margin-top:11px}
-.breath-out .big{font-size:42px;line-height:1}
-.breath-out .lb{font-size:12px;font-weight:800;margin-top:5px}
-.ok{color:var(--mint)}.warn{color:#FF9A4D}.bad{color:var(--coral)}
+/* ===== 呼吸 ===== */
+.sw{text-align:center}
+.sw-sec{font-size:19px;color:var(--soft);margin-bottom:12px}
+.sw-sec .num{font-size:46px;color:var(--ink)}
+.tapbig{width:100%;border:0;border-radius:22px;background:var(--me);color:#fff;padding:34px 0;cursor:pointer;
+  font-family:inherit;box-shadow:0 6px 0 rgba(0,0,0,.2);transition:transform .07s}
+.tapbig:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.2)}
+.tapbig .num{display:block;font-size:64px;line-height:1}
+.tapbig small{font-size:16px;font-weight:800;opacity:.92}
+.breath-out{text-align:center;padding:18px;border-radius:18px;background:#F2F8FF;margin-top:13px}
+.breath-out .big{font-size:52px;line-height:1}
+.breath-out .lb{font-size:16px;font-weight:800;margin-top:7px}
+.ok{color:var(--mint)}.warn{color:#E5701B}.bad{color:var(--coral)}
 
-.chart{width:100%;height:150px;display:block;margin:6px 0 2px}
-.chart-empty{text-align:center;color:var(--soft);font-size:12.5px;font-weight:700;padding:32px 0;line-height:1.8}
-.legend{display:flex;gap:14px;justify-content:center;font-size:11.5px;font-weight:800;color:var(--soft);margin:4px 0 0}
-.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
-.wlist{margin:12px 0 0;padding:0;list-style:none;max-height:190px;overflow:auto}
-.wlist li{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;
-  border-bottom:1px dashed var(--line);font-size:13px;font-weight:700}
+/* ===== グラフ ===== */
+.chart{width:100%;height:160px;display:block;margin:6px 0 2px}
+.chart-empty{text-align:center;color:var(--soft);font-size:16px;padding:34px 0;line-height:1.8}
+.legend{display:flex;gap:18px;justify-content:center;font-size:16px;color:var(--soft);margin:6px 0 0}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:50%;margin-right:6px;vertical-align:-2px}
+.wlist{margin:14px 0 0;padding:0;list-style:none;max-height:230px;overflow:auto}
+.wlist li{display:flex;justify-content:space-between;align-items:center;padding:13px 2px;
+  border-bottom:2px dashed var(--line);font-size:17px}
 .wlist li:last-child{border-bottom:0}
-.wlist .d{color:var(--soft);font-size:12px}
-.wlist .g{font-family:'Outfit',sans-serif;font-weight:800;font-size:15px}
-.wlist .dl{color:var(--soft);font-size:11px;font-weight:800}
-.del{border:0;background:transparent;color:#C3D6E8;font-size:16px;cursor:pointer;padding:0 4px;font-family:inherit}
-.edit{border:0;background:transparent;color:#A9C3DA;font-size:14px;cursor:pointer;padding:0 4px;font-family:inherit}
+.wlist .d{color:var(--soft);font-size:16px}
+.wlist .g{font-family:'Outfit',sans-serif;font-weight:800;font-size:20px}
+.wlist .dl{color:var(--soft);font-size:15px}
+.del{border:0;background:#F2F8FF;color:var(--soft);font-size:20px;cursor:pointer;
+  width:44px;height:44px;border-radius:12px;font-family:inherit;flex:none}
+.edit{border:0;background:#F2F8FF;color:var(--blue);font-size:18px;cursor:pointer;
+  width:44px;height:44px;border-radius:12px;font-family:inherit;flex:none}
 
-.calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.calhead .mo{font-weight:800;font-size:16px}
-.calhead .mo span{font-family:'Outfit';font-size:22px;margin-right:3px}
-.nav{border:0;background:#F0F7FF;color:var(--ink);width:34px;height:34px;border-radius:11px;
-  font-size:15px;font-weight:800;cursor:pointer;font-family:inherit}
+/* ===== カレンダー ===== */
+.calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.calhead .mo{font-weight:800;font-size:20px}
+.calhead .mo span{font-family:'Outfit';font-size:26px;margin-right:3px}
+.nav{border:0;background:#EAF4FF;color:var(--ink);width:52px;height:52px;border-radius:14px;
+  font-size:22px;font-weight:800;cursor:pointer;font-family:inherit}
 .nav:active{transform:scale(.92)}
-.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.wd{font-size:10px;text-align:center;color:var(--soft);font-weight:800;padding:2px 0 4px}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.wd{font-size:14px;text-align:center;color:var(--soft);font-weight:800;padding:3px 0 6px}
 .wd.s0{color:var(--coral)}.wd.s6{color:var(--blue)}
-.cd{position:relative;aspect-ratio:1;border:0;background:#F5FAFF;border-radius:12px;cursor:pointer;
-  font-family:'Outfit',sans-serif;font-weight:700;font-size:13px;color:var(--ink);padding:0;
+.cd{position:relative;aspect-ratio:1;border:0;background:#F2F8FF;border-radius:13px;cursor:pointer;
+  font-family:'Outfit',sans-serif;font-weight:800;font-size:17px;color:var(--ink);padding:0;
   display:flex;align-items:center;justify-content:center;transition:transform .1s}
 .cd:active{transform:scale(.9)}
 .cd.out{opacity:.25}
 .cd.today{background:var(--ink);color:#fff}
-.cd.sel{box-shadow:inset 0 0 0 3px var(--lav)}
-.cd .dts{position:absolute;bottom:5px;left:0;right:0;display:flex;gap:2px;justify-content:center}
-.cd .dts i{width:5px;height:5px;border-radius:50%;display:block}
+.cd.sel{box-shadow:inset 0 0 0 4px var(--lav)}
+.cd .dts{position:absolute;bottom:5px;left:0;right:0;display:flex;gap:3px;justify-content:center}
+.cd .dts i{width:7px;height:7px;border-radius:50%;display:block}
 
-.evday{margin-top:14px;padding-top:12px;border-top:2px dashed var(--line)}
-.evday h3{margin:0 0 9px;font-size:13px;font-weight:800;color:var(--soft)}
-.evlist{margin:0 0 11px;padding:0;list-style:none}
-.evlist li{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px;font-weight:700}
+.evday{margin-top:16px;padding-top:14px;border-top:3px dashed var(--line)}
+.evday h3{margin:0 0 11px;font-size:18px;color:var(--soft)}
+.evlist{margin:0 0 13px;padding:0;list-style:none}
+.evlist li{display:flex;align-items:center;gap:10px;padding:13px 0;border-bottom:2px dashed var(--line);font-size:17.5px}
 .evlist li:last-child{border-bottom:0}
-.evlist .bar{width:5px;height:22px;border-radius:99px;flex:none}
-.evlist .tag{font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;color:#fff;flex:none}
-.evlist .none{color:var(--soft);font-size:12.5px;padding:6px 0;border:0}
-.editing{background:#F6F2FF;border-radius:14px;padding:9px 11px;margin-bottom:9px;font-size:12px;
-  font-weight:800;color:#6C5CE0;display:flex;align-items:center;gap:8px}
-.editing button{margin-left:auto;border:0;background:transparent;color:#6C5CE0;font-weight:800;
-  font-family:inherit;font-size:12px;cursor:pointer;text-decoration:underline}
+.evlist .bar{width:6px;height:30px;border-radius:99px;flex:none}
+.evlist .tag{font-size:14px;font-weight:800;padding:4px 11px;border-radius:99px;color:#fff;flex:none}
+.evlist .none{color:var(--soft);font-size:16px;padding:8px 0;border:0}
+.editing{background:#F0EDFF;border-radius:16px;padding:12px 14px;margin-bottom:11px;font-size:16px;
+  color:#5346C4;display:flex;align-items:center;gap:10px}
+.editing button{margin-left:auto;border:0;background:transparent;color:#5346C4;font-weight:800;
+  font-family:inherit;font-size:16px;cursor:pointer;text-decoration:underline;padding:8px}
 
 .sch{margin:0;padding:0;list-style:none}
-.sch li{display:flex;gap:12px;padding:13px 0;border-bottom:1px dashed var(--line)}
+.sch li{display:flex;gap:13px;padding:16px 0;border-bottom:2px dashed var(--line)}
 .sch li:last-child{border-bottom:0}
-.sch .bar{width:5px;border-radius:99px;flex:none}
-.sch .ti{font-weight:800;font-size:14px;margin:0 0 3px}
-.sch .de{font-size:12px;color:var(--soft);font-weight:700;line-height:1.6;margin:0}
+.sch .bar{width:6px;border-radius:99px;flex:none}
+.sch .ti{font-weight:800;font-size:18px;margin:0 0 5px}
+.sch .de{font-size:15px;color:var(--soft);line-height:1.65;margin:0}
 .sch .cnt{margin-left:auto;flex:none;align-self:center;font-family:'Outfit',sans-serif;font-weight:800;
-  font-size:12px;color:var(--soft);text-align:right;line-height:1.3}
-.sch .cnt b{display:block;font-size:19px;color:var(--ink)}
+  font-size:15px;color:var(--soft);text-align:right;line-height:1.3}
+.sch .cnt b{display:block;font-size:24px;color:var(--ink)}
 .sch li.due .cnt b{color:var(--coral)}
 
-.alert{background:#FFF1F1;border-radius:var(--r);padding:16px 15px;box-shadow:0 4px 0 #FFD9DA}
+.alert{background:#FFECEC;border-radius:var(--r);padding:17px 15px;box-shadow:0 4px 0 #FFB9BA}
 .alert h2{color:var(--coral)}
-.alert ul{margin:0;padding-left:19px}
-.alert li{font-size:13px;font-weight:700;line-height:1.75;margin-bottom:7px}
+.alert ul{margin:0;padding-left:22px}
+.alert li{font-size:17px;line-height:1.8;margin-bottom:10px}
 .alert li:last-child{margin-bottom:0}
 .alert li span{color:var(--coral)}
 
-.law{background:#FFF7E8;border-radius:var(--r);padding:16px 15px;box-shadow:0 4px 0 #FFE6B8;margin-bottom:14px}
-.law h2{color:#B57A00;margin:0 0 10px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
-.law p{font-size:12.5px;font-weight:700;line-height:1.85;color:#8A6200;margin:0 0 10px}
+.law{background:#FFF6E5;border-radius:var(--r);padding:17px 15px;box-shadow:0 4px 0 #FFDFA0;margin-bottom:14px}
+.law h2{color:#A06A00;margin:0 0 12px;font-size:19px;display:flex;align-items:center;gap:9px}
+.law p{font-size:16px;line-height:1.9;color:#7A5200;margin:0 0 12px}
 .law p:last-child{margin-bottom:0}
-.law b{color:#7A4B00}
+.law b{color:#5E3E00}
 
-.note{background:#F3F0FF;border-radius:var(--r);padding:16px 15px;box-shadow:0 4px 0 #E0D9FF;margin-bottom:14px}
-.note h2{color:#6C5CE0;margin:0 0 10px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
-.note p{font-size:12.5px;font-weight:700;line-height:1.8;color:#5B54A8;margin:0}
+.note{background:#F0EDFF;border-radius:var(--r);padding:17px 15px;box-shadow:0 4px 0 #D5CCFF;margin-bottom:14px}
+.note h2{color:#5346C4;margin:0 0 12px;font-size:19px;display:flex;align-items:center;gap:9px}
+.note p{font-size:16px;line-height:1.9;color:#4A419E;margin:0}
 
 .hist{margin:0;padding:0;list-style:none}
-.hist li{padding:11px 0;border-bottom:1px dashed var(--line)}
+.hist li{padding:14px 0;border-bottom:2px dashed var(--line)}
 .hist li:last-child{border-bottom:0}
-.hist .hd{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;flex-wrap:wrap}
-.hist .pill{font-size:10.5px;font-weight:800;padding:3px 8px;border-radius:99px;color:#fff;font-family:'Outfit',sans-serif}
-.hist .memo{font-size:12px;color:var(--soft);font-weight:700;margin:5px 0 0;line-height:1.6}
+.hist .hd{display:flex;align-items:center;gap:10px;font-size:17px;flex-wrap:wrap;margin-top:8px}
+.hist .pill{font-size:14px;font-weight:800;padding:4px 11px;border-radius:99px;color:#fff;font-family:'Outfit',sans-serif}
+.hist .memo{font-size:16px;color:var(--soft);margin:7px 0 0;line-height:1.7}
+.hist .dt{font-size:16px;color:var(--soft);font-family:'Outfit';font-weight:800}
 
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);
-  color:#fff;padding:12px 20px;border-radius:999px;font-weight:800;font-size:13px;opacity:0;
-  transition:opacity .25s,transform .25s;pointer-events:none;z-index:99;max-width:88%;text-align:center}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);
+  color:#fff;padding:16px 24px;border-radius:999px;font-weight:800;font-size:17px;opacity:0;
+  transition:opacity .2s,transform .2s;pointer-events:none;z-index:99;max-width:90%;text-align:center;
+  box-shadow:0 6px 20px rgba(15,41,66,.3)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;padding:4px 10px;
-  border-radius:99px;background:#E8F8F3;color:#0F9A7E}
-.badge.off{background:#F1F5F9;color:#94A9BD}
+.badge{display:inline-flex;align-items:center;font-size:15px;font-weight:800;padding:5px 13px;
+  border-radius:99px;background:#DFF5EF;color:#0A7A63}
+.badge.off{background:#EAF0F6;color:#7A93AC}
 
-.foot{text-align:center;font-size:11px;color:#B4CADF;font-weight:700;padding:8px 0 4px}
+.foot{text-align:center;font-size:15px;color:#9DBAD4;padding:10px 0 6px}
 .hidden{display:none}
-:focus-visible{outline:3px solid var(--lav);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+:focus-visible{outline:4px solid var(--lav);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
@@ -223,95 +252,111 @@ textarea.field{font-family:inherit;font-size:14px;font-weight:500;resize:vertica
     <div class="ring-box">
       <svg viewBox="0 0 200 200" aria-hidden="true">
         <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#FF6FA5"/><stop offset="55%" stop-color="#FFC93C"/><stop offset="100%" stop-color="#1FC9A4"/>
+          <stop offset="0%" stop-color="#E8437F"/><stop offset="55%" stop-color="#E09400"/><stop offset="100%" stop-color="#0E9E80"/>
         </linearGradient></defs>
-        <circle class="ring-bg" cx="100" cy="100" r="87"/>
-        <circle class="ring-fg" id="ring" cx="100" cy="100" r="87"/>
+        <circle class="ring-bg" cx="100" cy="100" r="86"/>
+        <circle class="ring-fg" id="ring" cx="100" cy="100" r="86"/>
       </svg>
       <button class="photo" id="photoBtn" aria-label="写真を選ぶ">
-        <div class="photo-empty" id="photoEmpty"><b>＋</b>しゃしんを<br>いれる</div>
+        <div class="photo-empty" id="photoEmpty"><b>＋</b>しゃしん</div>
         <img id="photoImg" class="hidden" alt="">
       </button>
       <input type="file" id="photoIn" accept="image/*" class="hidden">
     </div>
-    <p class="score"><span class="num" id="doneN">0</span><span class="num" id="totalN">/17</span> <span id="scoreLb">きょうのできたこと</span></p>
+    <p class="score"><span class="num" id="doneN">0</span><span class="num" id="totalN">/17</span> <span id="scoreLb">きょうできたこと</span></p>
     <p class="bday hidden" id="bdayMsg"></p>
   </header>
+
+  <div class="warnbox hidden" id="warnBox">
+    <h3><span>⚠️</span>いつもと ちがうところ</h3>
+    <ul id="warnList"></ul>
+  </div>
 
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" id="t-today"  aria-selected="true"  aria-controls="p-today">きょう</button>
     <button class="tab" role="tab" id="t-weight" aria-selected="false" aria-controls="p-weight">きろく</button>
-    <button class="tab" role="tab" id="t-plan"   aria-selected="false" aria-controls="p-plan">カレンダー</button>
+    <button class="tab" role="tab" id="t-plan"   aria-selected="false" aria-controls="p-plan">よてい</button>
   </div>
 
   <!-- ============ きょう ============ -->
   <section id="p-today" role="tabpanel" aria-labelledby="t-today">
     <div class="card">
-      <h2><span class="dot" style="background:var(--pink)"></span>あさの30びょうチェック</h2>
+      <h2><span class="dot" style="background:var(--pink)"></span>あさの チェック</h2>
       <div class="chips" id="gMorning"></div>
-      <p class="hint">歯茎はピンクか。指で1秒押して2秒以内に色が戻れば血流は正常。</p>
+      <details class="more"><summary>くわしく</summary>
+        <p class="hint">歯茎はピンク色か見ます。指で1秒おして、2秒いないに色がもどれば大丈夫です。</p>
+      </details>
     </div>
 
     <div class="card">
-      <h2><span class="dot" style="background:var(--sun)"></span>ごはん → トイレ誘導</h2>
+      <h2><span class="dot" style="background:var(--sun)"></span>ごはん → トイレ</h2>
       <div id="gMeal"></div>
-      <p class="hint">
-        <b>ふやかし方</b>：40℃前後のぬるま湯で15〜20分。スプーンの背で潰してペースト状に。熱湯だと香りが飛びます。<br>
-        <b>トイレ誘導</b>：食べてから5〜15分が一番排泄しやすいタイミング。ここでトイレに連れて行き、できたら<b>静かに褒める</b>。失敗しても叱らない。毎食後くり返すのがトイレトレーニングの一番の近道です。<br>
-        <b>食後30分</b>は激しく遊ばせない。そのあとは寝かせる。2匹は<b>別の場所で</b>。
-      </p>
+      <details class="more"><summary>ごはんとトイレのコツ</summary>
+        <p class="hint">
+          <b>ふやかし方</b>｜40℃くらいのぬるま湯で15〜20分。スプーンの背でつぶしてペースト状に。熱いお湯だと香りがとんでしまいます。<br><br>
+          <b>トイレ</b>｜食べてから5〜15分がいちばん出やすい時間です。トイレに連れて行って、できたら<b>静かにほめる</b>。しっぱいしても叱らないでください。<br><br>
+          <b>食べたあと30分</b>は激しく遊ばせない。そのあとは寝かせてあげてください。<br><br>
+          2匹は<b>べつべつの場所で</b>食べさせてください。
+        </p>
+      </details>
     </div>
 
     <div class="card">
-      <h2><span class="dot" style="background:var(--lav)"></span>さわる練習 各30びょう</h2>
+      <h2><span class="dot" style="background:var(--lav)"></span>さわる れんしゅう</h2>
       <div class="chips" id="gTrain"></div>
-      <p class="hint">嫌がる前にやめる。おやつを一粒あげて終わる。口は「唇めくる→ガーゼ→指サック→歯ブラシ」の順に数週間かけて。必ず1匹ずつ。</p>
+      <details class="more"><summary>なぜやるの？</summary>
+        <p class="hint">いやがる前にやめて、おやつを一粒あげて終わります。将来の爪切り・歯みがき・耳そうじが楽になります。<b>かならず1匹ずつ</b>。</p>
+      </details>
     </div>
 
     <div class="card">
       <h2><span class="dot" style="background:#8B5E3C"></span>うんち</h2>
       <div class="seg" id="gPoop">
         <button data-v="good">ふつう</button>
-        <button data-v="soft">やわらか</button>
+        <button data-v="soft">やわらかい</button>
         <button data-v="loose">げり</button>
         <button data-v="bad">血・黒い</button>
       </div>
-      <p class="hint">白い粒（虫）が見えたら病院へ。2匹いると「どっちの便か」が分からなくなるので、排泄は見届けて記録を。</p>
+      <p class="hint">白いつぶ（虫）が見えたら病院へ。どちらの子のうんちか、見とどけて記録してください。</p>
     </div>
 
     <div class="card">
-      <h2><span class="dot" style="background:var(--mint)"></span>こきゅうの数</h2>
+      <h2><span class="dot" style="background:var(--mint)"></span>こきゅうの かず</h2>
       <div id="brIdle">
-        <button class="btn me wide" id="brStart">15秒 ストップウォッチ</button>
-        <div class="row" style="margin-top:9px">
-          <input class="field" id="brIn" type="number" inputmode="numeric" placeholder="手入力（15秒の回数）">
-          <button class="btn ghost" id="brBtn">記録</button>
-        </div>
+        <button class="btn me wide" id="brStart">15びょう はかる</button>
+        <details class="more"><summary>手で入力する</summary>
+          <div class="row" style="margin-top:8px">
+            <input class="field" id="brIn" type="number" inputmode="numeric" placeholder="15秒の回数">
+            <button class="btn ghost" id="brBtn">記録</button>
+          </div>
+        </details>
       </div>
       <div id="brRun" class="hidden">
         <div class="sw">
-          <div class="sw-sec">のこり <span class="num" id="brSec">15</span> 秒</div>
-          <button class="tapbig" id="brTap"><span class="num" id="brCnt">0</span><small>胸が上がるたびにタップ</small></button>
-          <button class="btn ghost wide" id="brCancel" style="margin-top:10px">やめる</button>
+          <div class="sw-sec">のこり <span class="num" id="brSec">15</span> びょう</div>
+          <button class="tapbig" id="brTap"><span class="num" id="brCnt">0</span><small>むねが上がるたびに ここをタップ</small></button>
+          <button class="btn ghost wide" id="brCancel" style="margin-top:12px">やめる</button>
         </div>
       </div>
       <div class="breath-out" id="brOut"></div>
-      <p class="hint">15〜35回／分が正常。40超は要注意、50以上が続けば病院。<b>寝ているとき</b>に数える。胸の上下1往復で1回。</p>
+      <details class="more"><summary>数えかた</summary>
+        <p class="hint"><b>ねているとき</b>に数えてください。起きた直後は速いので正しく測れません。むねが上がって下がるまでで1回です。1分15〜35回がふつう、40回をこえたら注意、50回以上がつづくときは病院へ。</p>
+      </details>
     </div>
 
     <div class="card">
-      <h2><span class="dot" style="background:#5AC8FA"></span>メモ</h2>
+      <h2><span class="dot" style="background:var(--blue)"></span>メモ</h2>
       <textarea class="field" id="memo" placeholder="気づいたこと、食べた量、室温など"></textarea>
     </div>
 
     <div class="alert">
-      <h2><span class="dot" style="background:var(--coral)"></span>すぐ病院へ</h2>
+      <h2><span class="dot" style="background:var(--coral)"></span>すぐ 病院へ</h2>
       <ul>
-        <li><span>震え・ぐったり・歯茎が白い</span> → 低血糖。砂糖水を歯茎に塗ってすぐ病院</li>
-        <li><span>呼吸50回超が続く／舌が青紫／首を伸ばして苦しそう</span></li>
-        <li><span>24時間ほとんど食べない</span></li>
-        <li><span>水を飲んでいないのによだれ＋舌なめずり＋歩き回る</span> → 誤飲の疑い</li>
-        <li>片方が下痢や嘔吐をしたら、<span>もう1匹もすぐ隔離して観察</span></li>
+        <li><span>ふるえる・ぐったり・歯茎が白い</span><br>低血糖かもしれません。砂糖水を歯茎にぬって、すぐ病院へ</li>
+        <li><span>こきゅうが50回をこえてつづく／舌が青むらさき／首をのばして苦しそう</span></li>
+        <li><span>まる1日ほとんど食べない</span></li>
+        <li><span>水を飲んでいないのによだれ＋舌なめずり＋歩きまわる</span><br>何か飲みこんだかもしれません</li>
+        <li>かた方が下痢や吐いたら、<span>もう1匹もはなして様子を見てください</span></li>
       </ul>
     </div>
   </section>
@@ -322,55 +367,58 @@ textarea.field{font-family:inherit;font-size:14px;font-weight:500;resize:vertica
       <h2><span class="dot" style="background:var(--sun)"></span><span id="wTitle">きょうの たいじゅう</span></h2>
       <div class="row">
         <input class="field" id="wIn" type="number" inputmode="decimal" placeholder="950">
-        <span class="unit">g</span>
-        <button class="btn" id="wBtn">きろく</button>
+        <span class="unit">グラム</span>
+        <button class="btn" id="wBtn">記録</button>
       </div>
-      <p class="hint">週1回でOK。キッチンスケールに乗せて。成長期は「増えているか」が健康のバロメーター。</p>
+      <p class="hint">週に1回でだいじょうぶです。キッチンスケールに乗せてください。</p>
     </div>
 
     <div class="card">
-      <h2><span class="dot" style="background:var(--mint)"></span>2匹のグラフ</h2>
-      <svg class="chart" id="chart" viewBox="0 0 320 150" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <h2><span class="dot" style="background:var(--mint)"></span>たいじゅうの グラフ</h2>
+      <svg class="chart" id="chart" viewBox="0 0 320 160" preserveAspectRatio="none" aria-hidden="true"></svg>
       <div class="chart-empty hidden" id="chartEmpty">まだ記録がありません。<br>上の欄に体重を入れると、ここに線が出ます。</div>
       <div class="legend" id="legend"></div>
       <ul class="wlist" id="wList"></ul>
     </div>
 
     <div class="card">
-      <h2><span class="dot" style="background:var(--lav)"></span>きろくのりれき</h2>
+      <h2><span class="dot" style="background:var(--lav)"></span>これまでの きろく</h2>
       <ul class="hist" id="hist"></ul>
     </div>
 
     <div class="card">
       <h2><span class="dot" style="background:var(--blue)"></span>共有・バックアップ</h2>
       <button class="btn me wide" id="shareToday">きょうの記録を送る</button>
-      <div class="row" style="margin-top:9px">
-        <button class="btn ghost" id="expBtn" style="flex:1">書き出す</button>
-        <button class="btn ghost" id="impBtn" style="flex:1">読み込む</button>
-      </div>
-      <input type="file" id="impIn" accept="application/json,.json" class="hidden">
-      <p class="hint">全データをファイルに保存して、別の端末で読み込めます。機種変更やバックアップに。</p>
+      <details class="more"><summary>そのほか</summary>
+        <div class="row" style="margin-top:10px">
+          <button class="btn ghost" id="expBtn" style="flex:1">書き出す</button>
+          <button class="btn ghost" id="impBtn" style="flex:1">読みこむ</button>
+        </div>
+        <input type="file" id="impIn" accept="application/json,.json" class="hidden">
+        <p class="hint">全部のデータをファイルに保存して、べつの端末で読みこめます。機種変更やバックアップに。</p>
+      </details>
     </div>
 
     <div class="card">
       <h2><span class="dot" style="background:#06C755"></span>LINE通知 <span class="badge off" id="lineBadge">オフ</span></h2>
-      <div class="row" style="margin-bottom:8px">
-        <input class="field txt sm" id="cfgUrl" placeholder="GASのウェブアプリURL（https://script.google.com/…/exec）">
-      </div>
-      <div class="row" style="margin-bottom:9px">
-        <input class="field txt" id="cfgWho" placeholder="入力する人の名前（例：ママ）">
-      </div>
-      <button class="btn ghost wide" id="cfgTest">テスト送信</button>
-      <p class="hint">
-        URLを入れると、記録するたびに自動でLINEに届きます。<br>
-        <b>すぐ届く</b>：体重・呼吸数・うんち・げり／血のとき<br>
-        <b>まとめて1通</b>：チェックとメモ（最後の操作から2分後）<br>
-        <b>すぐ＋警告つき</b>：呼吸40回超、うんちが「げり」「血・黒い」
-      </p>
+      <details class="more"><summary>設定する（家族用）</summary>
+        <div class="row" style="margin:10px 0 9px">
+          <input class="field txt" id="cfgUrl" placeholder="GASのウェブアプリURL">
+        </div>
+        <div class="row" style="margin-bottom:10px">
+          <input class="field txt" id="cfgWho" placeholder="入力する人の名前（例：ママ）">
+        </div>
+        <button class="btn ghost wide" id="cfgTest">テスト送信</button>
+        <p class="hint">
+          <b>すぐ届く</b>｜心配なサインが出たときだけ（呼吸40回超、げり、血、食事ぬけ、体重の急な減りなど）<br>
+          <b>夜21時に1通</b>｜その日の記録をまとめて<br>
+          ふだんのチェックでは通知は飛びません。
+        </p>
+      </details>
     </div>
   </section>
 
-  <!-- ============ カレンダー ============ -->
+  <!-- ============ よてい ============ -->
   <section id="p-plan" role="tabpanel" aria-labelledby="t-plan" class="hidden">
     <div class="card">
       <div class="calhead">
@@ -387,10 +435,10 @@ textarea.field{font-family:inherit;font-size:14px;font-weight:500;resize:vertica
         <div class="editing hidden" id="editBar">
           <span>編集中</span><button type="button" id="editCancel">やめる</button>
         </div>
-        <div class="row" style="margin-bottom:8px">
-          <input class="field txt" id="evTitle" placeholder="予定を書く（例：病院で健康チェック）">
+        <div class="row" style="margin-bottom:10px">
+          <input class="field txt" id="evTitle" placeholder="よてい（例：病院で健康チェック）">
         </div>
-        <div class="row" style="margin-bottom:8px">
+        <div class="row" style="margin-bottom:10px">
           <input class="field txt" id="evDateIn" type="date">
           <span class="unit">日付</span>
         </div>
@@ -398,63 +446,64 @@ textarea.field{font-family:inherit;font-size:14px;font-weight:500;resize:vertica
           <select class="field" id="evWho">
             <option value="-1">2匹</option><option value="0">ルナ</option><option value="1">ミル</option>
           </select>
-          <button class="btn me" id="evAdd" style="flex:1">この日に追加</button>
+          <button class="btn me" id="evAdd" style="flex:1">ついか</button>
         </div>
       </div>
     </div>
 
     <div class="card">
-      <h2><span class="dot" style="background:var(--pink)"></span>これからの予定</h2>
+      <h2><span class="dot" style="background:var(--pink)"></span>これからの よてい</h2>
       <ul class="sch" id="sch"></ul>
     </div>
 
     <div class="law">
-      <h2><span class="dot" style="background:#E5A200"></span>期限のある手続き（義務）</h2>
-      <p><b>マイクロチップの登録変更</b>｜引き渡しから<b>30日以内</b>。環境省のデータベースで飼い主情報を自分に書き換えます。ショップから渡された登録証明書の番号が必要。放置すると、迷子のときに前の所有者へ連絡が行きます。</p>
-      <p><b>犬の登録（畜犬登録）</b>｜生後91日を過ぎてから<b>30日以内</b>に市区町村へ。生涯1回。鑑札が交付されます。</p>
-      <p><b>狂犬病予防注射</b>｜生後91日以降に1回、以降は<b>毎年4〜6月</b>。混合ワクチンとは別で、法律上の義務。混合とは1〜4週間空けます。</p>
+      <h2><span class="dot" style="background:#C98A00"></span>期限のある 手つづき</h2>
+      <p><b>マイクロチップの登録変更</b><br>お迎えから<b>30日いない</b>。環境省のデータベースで飼い主の情報を書きかえます。ショップからもらった登録証明書の番号が必要です。</p>
+      <p><b>犬の登録</b><br>生後91日をすぎてから<b>30日いない</b>に市区町村へ。一生に1回。鑑札がもらえます。</p>
+      <p><b>狂犬病の注射</b><br>生後91日いこうに1回、そのあとは<b>毎年4〜6月</b>。混合ワクチンとは別で、法律で決まっています。混合とは1〜4週間あけます。</p>
     </div>
 
     <div class="note">
-      <h2><span class="dot" style="background:#6C5CE0"></span>毎月・毎年つづくこと</h2>
+      <h2><span class="dot" style="background:#5346C4"></span>毎月・毎年つづくこと</h2>
       <p>
-        ・<b>フィラリア予防</b>｜九州はおおむね5〜12月に月1回。開始前に検査が要ることがあります<br>
-        ・<b>ノミ・マダニ予防</b>｜月1回、通年が安心<br>
-        ・<b>混合ワクチン</b>｜子犬期に2〜3回、以降は年1回または3年に1回<br>
-        ・<b>健康診断</b>｜年1回。若いうちの数値を残しておくと後年の比較材料になります
+        ・<b>フィラリア予防</b>｜5〜12月に月1回<br>
+        ・<b>ノミ・マダニ予防</b>｜月1回、一年中が安心<br>
+        ・<b>混合ワクチン</b>｜子犬のうちに2〜3回、そのあと年1回<br>
+        ・<b>健康診断</b>｜年1回
       </p>
     </div>
 
     <div class="note">
-      <h2><span class="dot" style="background:#6C5CE0"></span>2匹いっしょに育てるとき</h2>
+      <h2><span class="dot" style="background:#5346C4"></span>2匹いっしょに育てるとき</h2>
       <p>
-        ・<b>クレートは別。</b>寝る場所も分ける<br>
-        ・<b>散歩は1匹ずつ</b>の時間を作る<br>
-        ・しつけと「さわる練習」は必ず個別に<br>
-        ・呼び分けの練習は、名前を呼ばれた子だけにおやつ
+        ・<b>ケージは別。</b>寝る場所も分ける<br>
+        ・<b>散歩は1匹ずつ</b>の時間をつくる<br>
+        ・しつけと「さわる練習」はかならず1匹ずつ<br>
+        ・名前を呼ばれた子だけにおやつをあげる
       </p>
     </div>
 
     <div class="card">
-      <h2><span class="dot" style="background:#5AC8FA"></span>かんきょう</h2>
+      <h2><span class="dot" style="background:var(--blue)"></span>すごしかた</h2>
       <p class="hint" style="margin-top:0">
         ・リビングのサークルに布をかけて暗くする<br>
-        ・室温25〜26℃。床の高さで測る<br>
-        ・アルミプレートはサークルの一部だけ。毛布側に逃げられるように<br>
-        ・iPad・充電ケーブルは届かない場所へ<br>
-        ・1日18〜20時間眠るのが正常。食後は寝かせる<br>
-        ・<b>夜間救急の場所と電話番号</b>を今のうちに調べて冷蔵庫に貼る
+        ・室温25〜26℃。ゆかの高さではかる<br>
+        ・アルミプレートはサークルの一部だけ。毛布のほうに逃げられるように<br>
+        ・充電ケーブルは届かない場所へ<br>
+        ・1日18〜20時間ねるのがふつうです<br>
+        ・<b>夜間救急の場所と電話番号</b>を冷蔵庫に貼っておく
       </p>
     </div>
 
     <div class="card">
       <h2><span class="dot" style="background:var(--soft)"></span>プロフィール</h2>
-      <div class="row" style="margin-bottom:9px"><input class="field txt" id="pName" placeholder="なまえ"></div>
-      <div class="row" style="margin-bottom:9px"><input class="field txt" id="pBd" type="date"><span class="unit">誕生日</span></div>
-      <div class="row" style="margin-bottom:9px"><input class="field txt" id="pHome" type="date"><span class="unit">おむかえ日</span></div>
+      <div class="row" style="margin-bottom:10px"><input class="field txt" id="pName" placeholder="なまえ"></div>
+      <div class="row" style="margin-bottom:10px"><input class="field txt" id="pBd" type="date"><span class="unit">誕生日</span></div>
+      <div class="row" style="margin-bottom:10px"><input class="field txt" id="pHome" type="date"><span class="unit">お迎え日</span></div>
       <div class="row"><input class="field txt" id="pVac" type="date"><span class="unit">次のワクチン</span></div>
-      <p class="hint">いま表示している子の設定です。上の名前タブで切り替えてから編集してください。</p>
-      <div class="row" style="margin-top:12px"><button class="btn ghost wide" id="resetBtn">すべての記録を消す</button></div>
+      <details class="more"><summary>データを消す</summary>
+        <button class="btn ghost wide" id="resetBtn" style="margin-top:10px">すべての記録を消す</button>
+      </details>
     </div>
   </section>
 
@@ -476,21 +525,22 @@ const store={
   }
 };
 
-const MORNING=[{k:'gums',l:'歯茎の色'},{k:'eyes',l:'目'},{k:'poop',l:'うんち'},{k:'appe',l:'食欲・水'},{k:'walk',l:'歩き方'}];
+const MORNING=[{k:'gums',l:'歯ぐき'},{k:'eyes',l:'目'},{k:'poop',l:'うんち'},{k:'appe',l:'食欲・水'},{k:'walk',l:'歩き方'}];
 const MEALS=[{k:'m1',tk:'p1',l:'あさ',t:'7:00'},{k:'m2',tk:'p2',l:'ひる',t:'12:00'},
              {k:'m3',tk:'p3',l:'ゆうがた',t:'17:00'},{k:'m4',tk:'p4',l:'よる',t:'21:30'}];
-const TRAIN=[{k:'mouth',l:'口を触る'},{k:'paw',l:'足先'},{k:'ear',l:'耳'},{k:'brush',l:'ブラッシング'}];
+const TRAIN=[{k:'mouth',l:'口をさわる'},{k:'paw',l:'足さき'},{k:'ear',l:'耳'},{k:'brush',l:'ブラッシング'}];
 const LABEL={}; [...MORNING,...TRAIN].forEach(x=>LABEL[x.k]=x.l);
-MEALS.forEach(x=>{LABEL[x.k]=x.l+'のごはん';LABEL[x.tk]=x.l+'のトイレ誘導'});
+MEALS.forEach(x=>{LABEL[x.k]=x.l+'のごはん';LABEL[x.tk]=x.l+'のトイレ'});
 const ALLK=[...MORNING.map(x=>x.k),...MEALS.map(x=>x.k),...MEALS.map(x=>x.tk),...TRAIN.map(x=>x.k)];
 const TOTAL=ALLK.length;
-const COLORS=['#FF6FA5','#33B3F5'];
+const COLORS=['#E8437F','#0E8FD8'];
 const WD=['日','月','火','水','木','金','土'];
 const DEF=[{n:'ルナ',b:'2026-05-23'},{n:'ミル',b:'2026-05-26'}];
 const HOME='2026-07-31', INS='2026-09-01';
+const PL={good:['ふつう','#0E9E80'],soft:['やわらかい','#E09400'],loose:['げり','#E5701B'],bad:['血・黒い','#E03A3F']};
 
 const blank=(n,bd)=>({name:n,birthday:bd,vaccine:'2026-08-23',home:HOME,photo:'',days:{},weights:[]});
-let D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],cfg:{url:'',who:''},v:5};
+let D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],cfg:{url:'',who:''},sent:{},v:6};
 let calY,calM,selDate=null,editId=null;
 
 const $=id=>document.getElementById(id);
@@ -500,50 +550,126 @@ const todayKey=()=>ymd(new Date());
 const dstr=s=>new Date(s+'T00:00:00');
 const addD=(s,n)=>{const x=dstr(s);x.setDate(x.getDate()+n);return ymd(x)};
 const addM=(s,n)=>{const x=dstr(s);x.setMonth(x.getMonth()+n);return ymd(x)};
-const day=()=>{const g=dog(),k=todayKey(); if(!g.days[k])g.days[k]={c:{},poop:null,breath:null,memo:''}; return g.days[k]};
+const dayOf=(g,k)=>{if(!g.days[k])g.days[k]={c:{},poop:null,breath:null,memo:''};return g.days[k]};
+const day=()=>dayOf(dog(),todayKey());
 const save=()=>store.set(D);
 const esc=s=>String(s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
 let tt;
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)}
 
-/* ---------- LINE通知 ---------- */
-let queue=[],qTimer=null;
+/* ================= LINE通知 ================= */
 async function post(text,urgent){
   const url=(D.cfg&&D.cfg.url||'').trim(); if(!url)return;
   const who=(D.cfg.who||'').trim();
-  const body=JSON.stringify({text,who,urgent:!!urgent,at:new Date().toISOString()});
   try{
-    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body});
+    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({text,who,urgent:!!urgent,at:new Date().toISOString()})});
   }catch(e){}
 }
-function notifyNow(line,urgent){ post(line,urgent); }
-function notifyLater(line){
-  queue.push(line);
-  clearTimeout(qTimer);
-  qTimer=setTimeout(()=>{
-    if(!queue.length)return;
-    post(queue.join('\n'),false); queue=[];
-  },120000);
-}
-$('cfgUrl').oninput=e=>{D.cfg.url=e.target.value;save();paintCfg()};
-$('cfgWho').oninput=e=>{D.cfg.who=e.target.value;save()};
-$('cfgTest').onclick=()=>{
-  if(!(D.cfg.url||'').trim()){toast('先にURLを入れてください');return;}
-  post('🐾 テスト送信です。届いていれば設定はできています。',false);
-  toast('送信しました');
-};
-function paintCfg(){
-  const on=!!(D.cfg&&D.cfg.url||'').trim();
-  const b=$('lineBadge'); b.textContent=on?'オン':'オフ'; b.className='badge'+(on?'':' off');
+// 同じ内容を1日1回しか送らない
+function once(id,text,urgent){
+  const k=todayKey()+'|'+id;
+  if(D.sent[k])return;
+  D.sent[k]=1;
+  Object.keys(D.sent).forEach(x=>{if(x.slice(0,10)<addD(todayKey(),-3))delete D.sent[x]});
+  save(); post(text,urgent);
 }
 
+/* ================= 異常の検出 ================= */
+function checkups(){
+  const k=todayKey(), now=new Date(), hh=now.getHours(), out=[];
+  D.dogs.forEach(g=>{
+    const d=g.days[k]||{c:{},poop:null,breath:null};
+    const N=g.name;
+
+    // 呼吸
+    if(d.breath>=50) out.push({id:N+'-br',lv:2,t:`${N}｜こきゅうが ${d.breath}回/分。50回をこえています`,
+      s:'すぐ病院へ連絡してください'});
+    else if(d.breath>=40) out.push({id:N+'-br',lv:1,t:`${N}｜こきゅうが ${d.breath}回/分。すこし速いです`,
+      s:'すずしい場所でもう一度はかってください'});
+
+    // うんち
+    if(d.poop==='bad') out.push({id:N+'-poop',lv:2,t:`${N}｜うんちに 血・黒いものがあります`,s:'すぐ病院へ'});
+    else if(d.poop==='loose') out.push({id:N+'-poop',lv:1,t:`${N}｜げりをしています`,s:'2日つづくようなら病院へ'});
+
+    // 下痢が2日続く
+    const y=g.days[addD(k,-1)];
+    if(y&&(y.poop==='loose'||y.poop==='bad')&&(d.poop==='loose'||d.poop==='bad'))
+      out.push({id:N+'-poop2',lv:2,t:`${N}｜おなかの調子が2日つづけて悪いです`,s:'病院で見てもらってください'});
+
+    // ごはん抜け（時刻を過ぎているのに未チェック）
+    const due=MEALS.filter(m=>hh>=parseInt(m.t)+2);
+    const miss=due.filter(m=>!d.c[m.k]);
+    if(miss.length>=2) out.push({id:N+'-meal',lv:2,t:`${N}｜ごはんが ${miss.length}回ぶん 記録されていません`,
+      s:'食べていない場合、この月齢は低血糖に注意です'});
+    else if(miss.length===1) out.push({id:N+'-meal',lv:1,t:`${N}｜${miss[0].l}のごはんが まだです`,s:''});
+
+    // 体重
+    const w=[...g.weights].sort((a,b)=>a.date<b.date?-1:1);
+    if(w.length>=2){
+      const last=w[w.length-1], prev=w[w.length-2];
+      const diff=last.g-prev.g, rate=diff/prev.g;
+      const gap=Math.round((dstr(last.date)-dstr(prev.date))/86400000);
+      if(rate<=-0.05) out.push({id:N+'-w',lv:2,t:`${N}｜体重が ${gap}日で ${Math.abs(diff)}g へっています`,
+        s:'5%以上の減少です。病院で見てもらってください'});
+      else if(diff<0) out.push({id:N+'-w',lv:1,t:`${N}｜体重が ${gap}日で ${Math.abs(diff)}g へりました`,
+        s:'成長期はふえるのがふつうです'});
+      else if(gap>=14&&rate<0.02) out.push({id:N+'-w2',lv:1,t:`${N}｜体重が ${gap}日ほとんど ふえていません`,s:''});
+    }
+    // 体重を長く測っていない
+    if(w.length){
+      const g2=Math.round((new Date()-dstr(w[w.length-1].date))/86400000);
+      if(g2>=14) out.push({id:N+'-wold',lv:1,t:`${N}｜体重を ${g2}日 はかっていません`,s:'週1回が目安です'});
+    }
+
+    // 歩き方（パテラのサイン）
+    if(d.c.walk===false){}
+  });
+  return out;
+}
+
+function paintWarn(){
+  const w=checkups(), box=$('warnBox'), ul=$('warnList');
+  if(!w.length){box.classList.add('hidden');return;}
+  box.classList.remove('hidden');
+  ul.innerHTML=w.map(x=>`<li>${esc(x.t)}${x.s?`<br><span style="color:var(--soft);font-size:15px">${esc(x.s)}</span>`:''}</li>`).join('');
+  // 重いものだけ即LINE
+  w.filter(x=>x.lv===2).forEach(x=>once(x.id,`${x.t}\n${x.s}`,true));
+}
+
+/* ================= 夜のまとめ ================= */
+function dailyText(){
+  const k=todayKey(), [y,m,d]=k.split('-');
+  let s=`🐾 ${Number(m)}月${Number(d)}日の記録\n`;
+  D.dogs.forEach(g=>{
+    const dd=g.days[k];
+    s+=`\n【${g.name}】${ageText(g.birthday)}\n`;
+    if(!dd){s+='・記録なし\n';return;}
+    s+=`・チェック ${doneCount(g,k)}/${TOTAL}\n`;
+    const dn=key=>dd.c[key]?'○':'ー';
+    s+=`・ごはん/トイレ ${MEALS.map(mm=>`${mm.l}${dn(mm.k)}${dn(mm.tk)}`).join(' ')}\n`;
+    if(dd.poop) s+=`・うんち ${PL[dd.poop][0]}\n`;
+    if(dd.breath) s+=`・こきゅう ${dd.breath}回/分\n`;
+    const w=g.weights.find(x=>x.date===k); if(w) s+=`・体重 ${w.g}g\n`;
+    if(dd.memo) s+=`・メモ ${dd.memo}\n`;
+  });
+  const w=checkups();
+  if(w.length) s+='\n― 気になるところ ―\n'+w.map(x=>'・'+x.t).join('\n');
+  return s;
+}
+function maybeDaily(){
+  if(new Date().getHours()<21)return;
+  once('daily',dailyText(),false);
+}
+
+/* ================= 表示 ================= */
 function ageText(bd){
   const b=dstr(bd); if(isNaN(b))return '—';
   const n=new Date(); let m=(n.getFullYear()-b.getFullYear())*12+(n.getMonth()-b.getMonth());
   let ref=new Date(b); ref.setMonth(b.getMonth()+m);
   if(ref>n){m--;ref=new Date(b);ref.setMonth(b.getMonth()+m);}
   const y=Math.floor(m/12);
-  return (y?`${y}歳${m%12}ヶ月`:`生後 ${m}ヶ月`)+`${Math.floor((n-ref)/86400000)}日`;
+  return (y?`${y}さい${m%12}ヶ月`:`生後 ${m}ヶ月`)+`${Math.floor((n-ref)/86400000)}日`;
 }
 function doneCount(g,k){const d=g.days[k]; if(!d)return 0; let n=0; ALLK.forEach(x=>{if(d.c[x])n++}); return n;}
 
@@ -565,10 +691,8 @@ function paintDogs(){
 
 function toggle(k,btn){
   const d=day(); d.c[k]=!d.c[k]; btn.setAttribute('aria-pressed',!!d.c[k]);
-  if(d.c[k]) notifyLater(`✅ ${dog().name}｜${LABEL[k]}`);
-  const n=doneCount(dog(),todayKey());
-  if(n===TOTAL) notifyLater(`🎉 ${dog().name}｜きょうのチェック ${TOTAL}/${TOTAL} 完了`);
-  paintRing(); paintDogs(); paintHist(); save();
+  paintRing(); paintDogs(); paintHist(); paintWarn(); save();
+  if(navigator.vibrate)navigator.vibrate(10);
 }
 function chips(el,items){
   el.innerHTML='';
@@ -585,48 +709,42 @@ function meals(){
   const el=$('gMeal'); el.innerHTML='';
   MEALS.forEach(it=>{
     const row=document.createElement('div'); row.className='meal';
-    row.innerHTML=`<div class="when"><b>${it.l}</b><span>${it.t}</span></div>`;
+    row.innerHTML=`<div class="when">${it.l}<span>${it.t}</span></div>`;
+    const pair=document.createElement('div'); pair.className='pair';
     const a=document.createElement('button');
-    a.className='chip sm'; a.type='button';
+    a.className='chip'; a.type='button';
     a.innerHTML='<span class="box">✓</span><span>ごはん</span>';
     a.setAttribute('aria-pressed',!!day().c[it.k]); a.onclick=()=>toggle(it.k,a);
-    const ar=document.createElement('span'); ar.className='arrow'; ar.textContent='→';
     const t=document.createElement('button');
-    t.className='chip sm'; t.type='button';
-    t.innerHTML='<span class="box">✓</span><span>トイレ誘導</span>';
+    t.className='chip'; t.type='button';
+    t.innerHTML='<span class="box">✓</span><span>トイレ</span>';
     t.setAttribute('aria-pressed',!!day().c[it.tk]); t.onclick=()=>toggle(it.tk,t);
-    row.append(a,ar,t); el.appendChild(row);
+    pair.append(a,t); row.appendChild(pair); el.appendChild(row);
   });
 }
 
-const C=2*Math.PI*87;
+const C=2*Math.PI*86;
 function paintRing(){
   const n=doneCount(dog(),todayKey());
   const r=$('ring'); r.style.strokeDasharray=C; r.style.strokeDashoffset=C*(1-n/TOTAL);
   $('doneN').textContent=n; $('totalN').textContent='/'+TOTAL;
   const full=n===TOTAL;
-  $('scoreLb').textContent=full?'ぜんぶできた！':'きょうのできたこと';
+  $('scoreLb').textContent=full?'ぜんぶ できました！':'きょうできたこと';
   $('scoreLb').className=full?'all':'';
   const g=dog(), t=new Date(), bd=dstr(g.birthday), el=$('bdayMsg');
   if(!isNaN(bd)&&bd.getMonth()===t.getMonth()&&bd.getDate()===t.getDate()&&t.getFullYear()>bd.getFullYear()){
-    el.textContent=`🎂 ${g.name} ${t.getFullYear()-bd.getFullYear()}歳の誕生日`; el.classList.remove('hidden');
+    el.textContent=`🎂 ${g.name} ${t.getFullYear()-bd.getFullYear()}さいの誕生日`; el.classList.remove('hidden');
   }else el.classList.add('hidden');
 }
 
-/* ---------- breath ---------- */
+/* ---------- 呼吸 ---------- */
 let swTimer=null,swCount=0,swEnd=0;
-function judge(v){return v>=50?['bad','続くようなら病院へ']:v>=40?['warn','要注意。涼しくして再測定']:['ok','正常の範囲です']}
+function judge(v){return v>=50?['bad','すぐ病院へ']:v>=40?['warn','すこし速いです']:['ok','ふつうの範囲です']}
 function paintBreath(){
   const v=day().breath, o=$('brOut');
-  if(v==null){o.innerHTML='<div class="num big" style="color:var(--soft)">—</div><div class="lb" style="color:var(--soft)">ねているときに胸の上下を15秒</div>';return;}
+  if(v==null){o.innerHTML='<div class="num big" style="color:var(--soft)">—</div><div class="lb" style="color:var(--soft)">ねているときに数えます</div>';return;}
   const [cls,msg]=judge(v);
   o.innerHTML=`<div class="num big ${cls}">${v}</div><div class="lb ${cls}">回／分　${msg}</div>`;
-}
-function saveBreath(v){
-  day().breath=v; save(); paintBreath(); paintHist();
-  const [cls,msg]=judge(v);
-  const urgent=v>=40;
-  notifyNow(`${urgent?'⚠️':'🫁'} ${dog().name}｜呼吸 ${v}回/分（${msg}）`,urgent);
 }
 function swStop(){clearInterval(swTimer);swTimer=null;$('brRun').classList.add('hidden');$('brIdle').classList.remove('hidden')}
 $('brStart').onclick=()=>{
@@ -637,9 +755,9 @@ $('brStart').onclick=()=>{
     const left=Math.max(0,Math.ceil((swEnd-Date.now())/1000));
     $('brSec').textContent=left;
     if(left<=0){
-      swStop(); saveBreath(swCount*4);
-      if(navigator.vibrate)navigator.vibrate(120);
-      toast(`${swCount}回 × 4 = ${swCount*4}回／分`);
+      swStop(); day().breath=swCount*4; save(); paintBreath(); paintHist(); paintWarn();
+      if(navigator.vibrate)navigator.vibrate(150);
+      toast(`${swCount}回 × 4 ＝ 1分 ${swCount*4}回`);
     }
   },100);
 };
@@ -648,10 +766,10 @@ $('brCancel').onclick=swStop;
 $('brBtn').onclick=()=>{
   const v=parseInt($('brIn').value,10);
   if(isNaN(v)||v<=0){$('brIn').focus();return;}
-  $('brIn').value=''; saveBreath(v*4); toast('記録しました');
+  $('brIn').value=''; day().breath=v*4; save(); paintBreath(); paintHist(); paintWarn(); toast('記録しました');
 };
 
-/* ---------- weight ---------- */
+/* ---------- 体重 ---------- */
 function paintWeight(){
   $('wTitle').textContent=`きょうの ${dog().name} の たいじゅう`;
   const sets=D.dogs.map(g=>[...g.weights].sort((a,b)=>a.date<b.date?-1:1));
@@ -663,13 +781,13 @@ function paintWeight(){
     const ds=[...new Set(all.map(x=>x.date))].sort();
     const t0=dstr(ds[0]), t1=dstr(ds[ds.length-1]), span=Math.max(1,(t1-t0));
     const gs=all.map(x=>x.g), mn=Math.min(...gs), mx=Math.max(...gs), sp=(mx-mn)||1;
-    const px=d=>14+292*((dstr(d)-t0)/span), py=g=>132-((g-mn)/sp)*112;
+    const px=d=>16+288*((dstr(d)-t0)/span), py=g=>140-((g-mn)/sp)*118;
     let out='';
     sets.forEach((s,i)=>{
       if(!s.length)return;
       const pts=s.map(x=>`${px(x.date)},${py(x.g)}`).join(' ');
-      if(s.length>1) out+=`<polyline points="${pts}" fill="none" stroke="${COLORS[i]}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>`;
-      out+=s.map(x=>`<circle cx="${px(x.date)}" cy="${py(x.g)}" r="5" fill="#fff" stroke="${COLORS[i]}" stroke-width="3.5"/>`).join('');
+      if(s.length>1) out+=`<polyline points="${pts}" fill="none" stroke="${COLORS[i]}" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+      out+=s.map(x=>`<circle cx="${px(x.date)}" cy="${py(x.g)}" r="6.5" fill="#fff" stroke="${COLORS[i]}" stroke-width="4.5"/>`).join('');
     });
     svg.innerHTML=out;
   }
@@ -678,17 +796,19 @@ function paintWeight(){
   if(!w.length){list.innerHTML='<li class="d">まだ記録がありません</li>';return;}
   [...w].reverse().forEach((x,ri)=>{
     const idx=w.length-1-ri, prev=idx>0?w[idx-1].g:null;
-    const dl=prev==null?'':(x.g-prev>=0?'+':'')+(x.g-prev)+'g';
+    const diff=prev==null?null:x.g-prev;
+    const dl=diff==null?'':(diff>=0?'+':'')+diff+'g';
     const li=document.createElement('li');
     li.innerHTML=`<span class="d">${x.date.slice(5).replace('-','/')}</span>
-      <span><span class="g">${x.g}</span><span class="unit"> g</span> <span class="dl">${dl}</span></span>`;
+      <span><span class="g">${x.g}</span><span class="unit"> g</span>
+      <span class="dl" style="${diff<0?'color:var(--coral)':''}">${dl}</span></span>`;
     const b=document.createElement('button'); b.className='del'; b.textContent='×'; b.setAttribute('aria-label','この記録を消す');
-    b.onclick=()=>{dog().weights=dog().weights.filter(y=>y.date!==x.date);save();paintWeight();};
+    b.onclick=()=>{if(!confirm('この記録を消しますか？'))return;
+      dog().weights=dog().weights.filter(y=>y.date!==x.date);save();paintWeight();paintWarn();};
     li.appendChild(b); list.appendChild(li);
   });
 }
 
-const PL={good:['ふつう','#1FC9A4'],soft:['やわらか','#FFC93C'],loose:['げり','#FF9A4D'],bad:['血・黒い','#FF5A5F']};
 function paintHist(){
   const keys=[...new Set(D.dogs.flatMap(g=>Object.keys(g.days)))].sort().reverse().slice(0,30);
   const el=$('hist'); el.innerHTML=''; let any=false;
@@ -698,37 +818,37 @@ function paintHist(){
       const d=g.days[k]; if(!d)return;
       const n=doneCount(g,k); if(!n&&!d.poop&&!d.breath&&!d.memo)return;
       const p=d.poop?PL[d.poop]:null;
-      rows+=`<div class="hd" style="margin-top:6px">
+      rows+=`<div class="hd">
         <span class="pill" style="background:${COLORS[i]}">${esc(g.name)}</span>
-        <span style="color:var(--soft);font-family:'Outfit';font-size:12px">${n}/${TOTAL}</span>
+        <span style="color:var(--soft);font-family:'Outfit'">${n}/${TOTAL}</span>
         ${p?`<span class="pill" style="background:${p[1]}">${p[0]}</span>`:''}
-        ${d.breath?`<span class="pill" style="background:#5AC8FA">呼吸 ${d.breath}</span>`:''}</div>
+        ${d.breath?`<span class="pill" style="background:#0E8FD8">こきゅう ${d.breath}</span>`:''}</div>
         ${d.memo?`<p class="memo">${esc(d.memo)}</p>`:''}`;
     });
     if(!rows)return; any=true;
     const li=document.createElement('li');
-    li.innerHTML=`<div style="font-size:12px;font-weight:800;color:var(--soft);font-family:'Outfit'">${k.slice(5).replace('-','/')}</div>${rows}`;
+    li.innerHTML=`<div class="dt">${k.slice(5).replace('-','/')}</div>${rows}`;
     el.appendChild(li);
   });
   if(!any) el.innerHTML='<li class="memo">まだ記録がありません。</li>';
 }
 
-/* ---------- events ---------- */
+/* ---------- よてい ---------- */
 function autoEvents(){
   const out=[];
   D.dogs.forEach((g,i)=>{
     const c=COLORS[i];
     if(g.vaccine){
-      out.push({date:g.vaccine,title:'混合ワクチン',who:i,color:c,fixed:true,note:'接種後、新しい証明書をマイページに再アップロード'});
-      out.push({date:addD(g.vaccine,14),title:'散歩デビューの目安',who:i,color:c,fixed:true,note:'最終接種から2週間。それまでは抱っこ散歩で外に慣らす'});
+      out.push({date:g.vaccine,title:'混合ワクチン',who:i,color:c,fixed:true,note:'接種後、新しい証明書を保険のマイページに再アップロード'});
+      out.push({date:addD(g.vaccine,14),title:'散歩デビューの目安',who:i,color:c,fixed:true,note:'最後の接種から2週間。それまでは抱っこ散歩で外に慣らす'});
     }
-    if(g.home) out.push({date:addD(g.home,30),title:'マイクロチップ登録変更 期限',who:i,color:'#E5A200',fixed:true,note:'環境省データベースで飼い主情報を変更（義務）'});
+    if(g.home) out.push({date:addD(g.home,30),title:'マイクロチップ登録変更 期限',who:i,color:'#C98A00',fixed:true,note:'環境省データベースで飼い主情報を変更（義務）'});
     if(g.birthday){
-      out.push({date:addD(g.birthday,91),title:'狂犬病予防注射・犬の登録',who:i,color:'#E5A200',fixed:true,note:'生後91日以降。ここから30日以内に市区町村へ（義務）'});
-      out.push({date:addM(g.birthday,6),title:'避妊手術の相談',who:i,color:'#9B8CFF',fixed:true,note:'生後6ヶ月ごろ。時期は獣医と相談'});
+      out.push({date:addD(g.birthday,91),title:'狂犬病の注射・犬の登録',who:i,color:'#C98A00',fixed:true,note:'生後91日いこう。ここから30日いないに市区町村へ（義務）'});
+      out.push({date:addM(g.birthday,6),title:'避妊手術の相談',who:i,color:'#6B5CE7',fixed:true,note:'生後6ヶ月ごろ。時期は獣医さんと相談'});
     }
   });
-  out.push({date:INS,title:'保険の補償開始',who:-1,color:'#1FC9A4',fixed:true,note:'それまでの期間は無保険'});
+  out.push({date:INS,title:'保険の補償かいし',who:-1,color:'#0E9E80',fixed:true,note:'それまでは無保険です'});
   return out;
 }
 function birthdaysOn(ds){
@@ -737,14 +857,14 @@ function birthdaysOn(ds){
     const b=dstr(g.birthday); if(isNaN(b))return;
     if(b.getMonth()+1===m&&b.getDate()===d&&y>=b.getFullYear()){
       const n=y-b.getFullYear();
-      out.push({date:ds,title:n===0?`${g.name} 誕生`:`🎂 ${g.name} ${n}歳の誕生日`,who:i,color:COLORS[i],fixed:true,note:''});
+      out.push({date:ds,title:n===0?`${g.name} 誕生`:`🎂 ${g.name} ${n}さいの誕生日`,who:i,color:COLORS[i],fixed:true,note:''});
     }
   });
   return out;
 }
 function eventsOn(ds){
   return [...birthdaysOn(ds),...autoEvents().filter(e=>e.date===ds),
-          ...D.events.filter(e=>e.date===ds).map(e=>({...e,color:e.who<0?'#9B8CFF':COLORS[e.who]}))];
+          ...D.events.filter(e=>e.date===ds).map(e=>({...e,color:e.who<0?'#6B5CE7':COLORS[e.who]}))];
 }
 const whoName=w=>w<0?'2匹':D.dogs[w].name;
 
@@ -774,20 +894,20 @@ function paintCal(){
 function paintEvDay(){
   if(!selDate){$('evDate').textContent='日付をえらぶ';$('evList').innerHTML='';return;}
   const [y,m,d]=selDate.split('-').map(Number);
-  $('evDate').textContent=`${m}月${d}日（${WD[new Date(y,m-1,d).getDay()]}）の予定`;
+  $('evDate').textContent=`${m}月${d}日（${WD[new Date(y,m-1,d).getDay()]}）のよてい`;
   if(!editId) $('evDateIn').value=selDate;
   const ev=eventsOn(selDate), el=$('evList'); el.innerHTML='';
   if(!ev.length){el.innerHTML='<li class="none">まだありません。下から追加できます。</li>';return;}
   ev.forEach(e=>{
     const li=document.createElement('li');
     li.innerHTML=`<span class="bar" style="background:${e.color}"></span>
-      <span style="flex:1">${esc(e.title)}${e.note?`<br><span style="font-size:11.5px;color:var(--soft)">${esc(e.note)}</span>`:''}</span>
+      <span style="flex:1">${esc(e.title)}${e.note?`<br><span style="font-size:15px;color:var(--soft)">${esc(e.note)}</span>`:''}</span>
       <span class="tag" style="background:${e.color}">${esc(whoName(e.who))}</span>`;
     if(!e.fixed){
       const ed=document.createElement('button'); ed.className='edit'; ed.textContent='✎'; ed.setAttribute('aria-label','編集');
       ed.onclick=()=>startEdit(e);
       const b=document.createElement('button'); b.className='del'; b.textContent='×'; b.setAttribute('aria-label','削除');
-      b.onclick=()=>{if(!confirm('この予定を消しますか？'))return;
+      b.onclick=()=>{if(!confirm('このよていを消しますか？'))return;
         D.events=D.events.filter(x=>x.id!==e.id);cancelEdit();save();paintCal();paintEvDay();paintSch()};
       li.append(ed,b);
     }
@@ -796,11 +916,11 @@ function paintEvDay(){
 }
 function startEdit(e){
   editId=e.id; $('evTitle').value=e.title; $('evWho').value=String(e.who); $('evDateIn').value=e.date;
-  $('editBar').classList.remove('hidden'); $('evAdd').textContent='変更を保存'; $('evTitle').focus();
+  $('editBar').classList.remove('hidden'); $('evAdd').textContent='ほぞん'; $('evTitle').focus();
 }
 function cancelEdit(){
   editId=null; $('evTitle').value=''; $('editBar').classList.add('hidden');
-  $('evAdd').textContent='この日に追加'; if(selDate)$('evDateIn').value=selDate;
+  $('evAdd').textContent='ついか'; if(selDate)$('evDateIn').value=selDate;
 }
 $('editCancel').onclick=cancelEdit;
 $('prevM').onclick=()=>{calM--;if(calM<0){calM=11;calY--}paintCal()};
@@ -811,12 +931,9 @@ $('evAdd').onclick=()=>{
   if(!t){$('evTitle').focus();return;}
   if(editId){
     const e=D.events.find(x=>x.id===editId); if(e){e.title=t;e.date=dt;e.who=who;}
-    notifyNow(`📅 予定を変更：${dt.slice(5).replace('-','/')} ${t}（${whoName(who)}）`,false);
-    toast('変更を保存しました');
+    toast('ほぞんしました');
   }else{
-    D.events.push({id:Date.now()+'',date:dt,title:t,who});
-    notifyNow(`📅 予定を追加：${dt.slice(5).replace('-','/')} ${t}（${whoName(who)}）`,false);
-    toast('予定を追加しました');
+    D.events.push({id:Date.now()+'',date:dt,title:t,who}); toast('ついかしました');
   }
   selDate=dt; cancelEdit(); save();
   const p=dstr(dt); calY=p.getFullYear(); calM=p.getMonth();
@@ -830,17 +947,17 @@ function paintSch(){
     const b=dstr(x.birthday); if(isNaN(b))return;
     for(const Y of [yy,yy+1]){
       const d=new Date(Y,b.getMonth(),b.getDate());
-      if(d>=now){bdays.push({t:`🎂 ${x.name} ${Y-b.getFullYear()}歳の誕生日`,d,c:COLORS[i],n:'毎年'});break;}
+      if(d>=now){bdays.push({t:`🎂 ${x.name} ${Y-b.getFullYear()}さいの誕生日`,d,c:COLORS[i],n:'毎年'});break;}
     }
   });
   const items=[
-    ...autoEvents().map(e=>({t:e.title+(e.who>=0?`（${D.dogs[e.who].name}）`:''),d:dstr(e.date),c:e.color,n:e.note,due:e.color==='#E5A200'})),
-    ...D.events.map(e=>({t:e.title,d:dstr(e.date),c:e.who<0?'#9B8CFF':COLORS[e.who],n:whoName(e.who)})),
+    ...autoEvents().map(e=>({t:e.title+(e.who>=0?`（${D.dogs[e.who].name}）`:''),d:dstr(e.date),c:e.color,n:e.note,due:e.color==='#C98A00'})),
+    ...D.events.map(e=>({t:e.title,d:dstr(e.date),c:e.who<0?'#6B5CE7':COLORS[e.who],n:whoName(e.who)})),
     ...bdays,
-    {t:'永久歯に生えかわり',d:dstr(addM(g.birthday,4)),c:'#9B8CFF',n:'生後4〜7ヶ月。乳歯遺残は保険対象外'},
-    {t:'手作りごはん 検討可',d:dstr(addM(g.birthday,10)),c:'#FFC93C',n:'生後10〜12ヶ月以降'}
+    {t:'永久歯に生えかわり',d:dstr(addM(g.birthday,4)),c:'#6B5CE7',n:'生後4〜7ヶ月。乳歯が残ると保険の対象外です'},
+    {t:'手作りごはん OK',d:dstr(addM(g.birthday,10)),c:'#E09400',n:'生後10〜12ヶ月いこう'}
   ].filter(i=>!isNaN(i.d)&&i.d>=now).sort((a,b)=>a.d-b.d);
-  if(!items.length){$('sch').innerHTML='<li class="de">これからの予定はありません。</li>';return;}
+  if(!items.length){$('sch').innerHTML='<li class="de">これからのよていはありません。</li>';return;}
   $('sch').innerHTML=items.map(i=>{
     const dd=Math.round((i.d-now)/86400000);
     return `<li${i.due?' class="due"':''}><span class="bar" style="background:${i.c}"></span>
@@ -849,26 +966,9 @@ function paintSch(){
   }).join('');
 }
 
-/* ---------- share ---------- */
-function todayText(){
-  const k=todayKey(), [y,m,d]=k.split('-');
-  let s=`🐾 ${Number(m)}月${Number(d)}日の記録\n`;
-  D.dogs.forEach(g=>{
-    const dd=g.days[k];
-    s+=`\n【${g.name}】${ageText(g.birthday)}\n`;
-    if(!dd){s+='・記録なし\n';return;}
-    s+=`・チェック ${doneCount(g,k)}/${TOTAL}\n`;
-    const dn=key=>dd.c[key]?'○':'—';
-    s+=`・ごはん／トイレ ${MEALS.map(mm=>`${mm.l}${dn(mm.k)}${dn(mm.tk)}`).join(' ')}\n`;
-    if(dd.poop) s+=`・うんち ${PL[dd.poop][0]}\n`;
-    if(dd.breath) s+=`・呼吸 ${dd.breath}回/分\n`;
-    const w=g.weights.find(x=>x.date===k); if(w) s+=`・体重 ${w.g}g\n`;
-    if(dd.memo) s+=`・メモ ${dd.memo}\n`;
-  });
-  return s;
-}
+/* ---------- 共有 ---------- */
 $('shareToday').onclick=async()=>{
-  const t=todayText();
+  const t=dailyText();
   try{ if(navigator.share){await navigator.share({text:t});return;} }catch(e){ if(e&&e.name==='AbortError')return; }
   try{ await navigator.clipboard.writeText(t); toast('コピーしました'); }
   catch(e){ prompt('コピーしてください',t); }
@@ -887,18 +987,28 @@ $('impIn').onchange=e=>{
     try{
       const o=JSON.parse(ev.target.result);
       if(!o||!Array.isArray(o.dogs))throw 0;
-      if(!confirm('いまの記録を、読み込んだ内容で置きかえます。よろしいですか？'))return;
+      if(!confirm('いまの記録を、読みこんだ内容で置きかえます。よろしいですか？'))return;
       D.dogs=o.dogs.map((x,i)=>({...blank(DEF[i]?DEF[i].n:'なまえ',DEF[i]?DEF[i].b:'2026-05-26'),...x}));
       D.active=Math.min(o.active||0,D.dogs.length-1);
       D.events=Array.isArray(o.events)?o.events:[];
       D.cfg=o.cfg||D.cfg;
-      save(); render(); toast('読み込みました');
-    }catch(err){ toast('このファイルは読み込めません'); }
+      save(); render(); toast('読みこみました');
+    }catch(err){ toast('このファイルは読みこめません'); }
   };
   fr.readAsText(f); e.target.value='';
 };
+$('cfgUrl').oninput=e=>{D.cfg.url=e.target.value;save();paintCfg()};
+$('cfgWho').oninput=e=>{D.cfg.who=e.target.value;save()};
+$('cfgTest').onclick=()=>{
+  if(!(D.cfg.url||'').trim()){toast('先にURLを入れてください');return;}
+  post('🐾 テスト送信です。届いていれば設定はできています。',false); toast('送信しました');
+};
+function paintCfg(){
+  const on=!!(D.cfg&&D.cfg.url||'').trim();
+  const b=$('lineBadge'); b.textContent=on?'オン':'オフ'; b.className='badge'+(on?'':' off');
+}
 
-/* ---------- photo ---------- */
+/* ---------- 写真 ---------- */
 $('photoBtn').onclick=()=>$('photoIn').click();
 $('photoIn').onchange=e=>{
   const f=e.target.files[0]; if(!f)return;
@@ -920,44 +1030,32 @@ function paintPhoto(){
   else{$('photoImg').classList.add('hidden');$('photoEmpty').classList.remove('hidden');}
 }
 
-/* ---------- misc ---------- */
+/* ---------- そのほか ---------- */
 $('gPoop').onclick=e=>{
   const b=e.target.closest('button'); if(!b)return;
-  const d=day(); const v=b.dataset.v;
-  d.poop = d.poop===v?null:v;
+  const d=day(); d.poop = d.poop===b.dataset.v?null:b.dataset.v;
   [...$('gPoop').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===d.poop));
-  save(); paintHist();
-  if(d.poop){
-    const bad=d.poop==='loose'||d.poop==='bad';
-    notifyNow(`${bad?'⚠️':'💩'} ${dog().name}｜うんち ${PL[d.poop][0]}`+(bad?'\n※続くようなら病院へ。もう1匹も観察を':''),bad);
-  }
+  save(); paintHist(); paintWarn();
+  if(navigator.vibrate)navigator.vibrate(10);
 };
 let mt;
-$('memo').oninput=e=>{
-  day().memo=e.target.value; save();
-  clearTimeout(mt);
-  mt=setTimeout(()=>{paintHist(); if(e.target.value.trim()) notifyLater(`📝 ${dog().name}｜メモ：${e.target.value.trim()}`);},1500);
-};
+$('memo').oninput=e=>{day().memo=e.target.value;save();clearTimeout(mt);mt=setTimeout(paintHist,800)};
 $('wBtn').onclick=()=>{
   const g=parseFloat($('wIn').value);
   if(isNaN(g)||g<=0){$('wIn').focus();return;}
-  const k=todayKey(), gg=Math.round(g);
-  const prev=[...dog().weights].sort((a,b)=>a.date<b.date?-1:1).filter(x=>x.date!==k).pop();
+  const k=todayKey();
   dog().weights=dog().weights.filter(x=>x.date!==k);
-  dog().weights.push({date:k,g:gg});
-  $('wIn').value=''; save(); paintWeight(); toast('記録しました');
-  const dl=prev?`（前回 ${prev.g}g から ${gg-prev.g>=0?'+':''}${gg-prev.g}g）`:'';
-  notifyNow(`⚖️ ${dog().name}｜体重 ${gg}g ${dl}`,false);
+  dog().weights.push({date:k,g:Math.round(g)});
+  $('wIn').value=''; save(); paintWeight(); paintWarn(); toast('記録しました');
 };
 $('pName').oninput=e=>{dog().name=e.target.value||'なまえ';paintDogs();paintWeight();paintHist();save()};
 $('pBd').onchange=e=>{dog().birthday=e.target.value;$('age').textContent=ageText(e.target.value);paintRing();paintCal();paintEvDay();paintSch();save()};
 $('pHome').onchange=e=>{dog().home=e.target.value;paintCal();paintEvDay();paintSch();save()};
-$('pVac').onchange=e=>{dog().vaccine=e.target.value;paintCal();paintEvDay();paintSch();save();
-  notifyNow(`💉 ${dog().name}｜次のワクチンを ${e.target.value} に設定`,false)};
+$('pVac').onchange=e=>{dog().vaccine=e.target.value;paintCal();paintEvDay();paintSch();save()};
 $('resetBtn').onclick=()=>{
-  if(!confirm('2匹分すべての記録・写真・予定を消します。元に戻せません。'))return;
+  if(!confirm('2匹ぶんすべての記録・写真・よていを消します。もとに戻せません。'))return;
   const cfg=D.cfg;
-  D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],cfg,v:5};
+  D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],cfg,sent:{},v:6};
   save(); render(); toast('消しました');
 };
 document.querySelectorAll('.tab').forEach(t=>{
@@ -968,10 +1066,7 @@ document.querySelectorAll('.tab').forEach(t=>{
     window.scrollTo({top:0,behavior:'smooth'});
   };
 });
-// 画面を閉じる前にたまっている分を送る
-document.addEventListener('visibilitychange',()=>{
-  if(document.visibilityState==='hidden'&&queue.length){clearTimeout(qTimer);post(queue.join('\n'),false);queue=[];}
-});
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'){paintWarn();maybeDaily();} });
 
 function render(){
   const g=dog();
@@ -983,7 +1078,7 @@ function render(){
   chips($('gMorning'),MORNING); meals(); chips($('gTrain'),TRAIN);
   [...$('gPoop').children].forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===day().poop));
   paintDogs(); paintPhoto(); paintRing(); paintBreath(); paintWeight(); paintHist();
-  paintCal(); paintEvDay(); paintSch(); paintCfg();
+  paintCal(); paintEvDay(); paintSch(); paintCfg(); paintWarn(); maybeDaily();
 }
 (async()=>{
   const s=await store.get();
@@ -992,10 +1087,12 @@ function render(){
     D.active=Math.min(s.active||0,D.dogs.length-1);
     D.events=Array.isArray(s.events)?s.events:[];
     D.cfg=Object.assign({url:'',who:''},s.cfg||{});
+    D.sent=s.sent||{};
     if((s.v||0)<4){ D.dogs.forEach((g,i)=>{ if(DEF[i]){g.birthday=DEF[i].b;} if(!g.home)g.home=HOME; }); save(); }
   }
   const n=new Date(); calY=n.getFullYear(); calM=n.getMonth(); selDate=todayKey();
   render();
+  setInterval(()=>{paintWarn();maybeDaily();},600000); // 10分ごと
 })();
 </script>
 </body>
