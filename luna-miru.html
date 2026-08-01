@@ -312,6 +312,43 @@ textarea.field{font-family:inherit;font-size:18px;font-weight:700;resize:vertica
 .wcell .dl{display:block;font-size:13px;color:var(--soft);margin-top:2px}
 .wcell.empty{color:#C2D6E6;cursor:default}
 .wlist li.none2{display:block;text-align:center;color:var(--soft);font-size:16px;padding:16px 0}
+
+/* ===== よていの日付タップ変更 ===== */
+.sch li{position:relative}
+.sch li.editable .ti{color:var(--ink)}
+.sch .pen{font-size:14px;color:var(--blue);margin-left:6px;font-weight:800}
+.dpick{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;margin:0;padding:0;
+  background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer;z-index:1}
+.undo{position:relative;z-index:3;display:block;margin:7px 0 0 auto;border:0;background:#EAF0F6;
+  color:var(--soft);font-family:inherit;font-weight:800;font-size:13px;padding:7px 12px;border-radius:99px;cursor:pointer}
+.schnote{font-size:14.5px;color:var(--soft);margin:-4px 0 12px;line-height:1.6}
+.sch li{gap:10px}
+.schchk{position:relative;z-index:2;flex:none;align-self:center;width:46px;height:46px;border-radius:14px;
+  border:3px solid var(--line);background:#fff;color:transparent;font-size:21px;font-weight:800;
+  font-family:inherit;cursor:pointer;padding:0}
+.schchk:active{transform:scale(.92)}
+.schchk[aria-pressed="true"]{background:var(--mint);border-color:var(--mint);color:#fff}
+.sch li.done{opacity:.45}
+.sch li.done .ti{text-decoration:line-through}
+
+/* ===== 起動時のおしらせ ===== */
+.modal{position:fixed;inset:0;background:rgba(15,41,66,.55);z-index:200;display:flex;
+  align-items:center;justify-content:center;padding:18px}
+.msheet{background:#fff;border-radius:24px;padding:20px 16px 16px;width:100%;max-width:430px;
+  max-height:86vh;display:flex;flex-direction:column;box-shadow:0 12px 40px rgba(15,41,66,.3)}
+.msheet h2{margin:0 0 4px;font-size:21px;font-weight:800;display:flex;align-items:center;gap:9px}
+.msheet .sub{font-size:14.5px;color:var(--soft);margin:0 0 14px}
+.mlist{list-style:none;margin:0 0 14px;padding:0;overflow:auto;flex:1}
+.mlist li{display:flex;gap:11px;align-items:flex-start;padding:13px 0;border-bottom:2px dashed var(--line)}
+.mlist li:last-child{border-bottom:0}
+.mlist .bar{width:6px;align-self:stretch;border-radius:99px;flex:none}
+.mlist .ti{margin:0 0 4px;font-size:17.5px;font-weight:800}
+.mlist .de{margin:0;font-size:14.5px;color:var(--soft);line-height:1.6}
+.mlist .when{margin-left:auto;flex:none;font-family:'Outfit',sans-serif;font-weight:800;font-size:14px;
+  color:#fff;background:var(--soft);padding:5px 11px;border-radius:99px;white-space:nowrap}
+.mlist .when.tdy{background:var(--coral)}
+.mlist .when.soon{background:var(--sun)}
+.mnone{text-align:center;color:var(--soft);font-size:16px;padding:22px 0;line-height:1.8}
 </style>
 </head>
 <body>
@@ -488,6 +525,7 @@ textarea.field{font-family:inherit;font-size:18px;font-weight:700;resize:vertica
 
     <div class="card">
       <h2><span class="dot" style="background:var(--pink)"></span>これからの よてい</h2>
+      <p class="schnote">✎ のついた行をタップすると、カレンダーが出て日にちを変えられます。</p>
       <ul class="sch" id="sch"></ul>
     </div>
 
@@ -541,6 +579,14 @@ textarea.field{font-family:inherit;font-size:18px;font-weight:700;resize:vertica
 
   <p class="foot">ルナとミルの健康手帳</p>
 </div>
+<div class="modal hidden" id="todayModal">
+  <div class="msheet" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <h2 id="mTitle"><span class="dot" style="background:var(--pink)"></span>きょうと この1週間</h2>
+    <p class="sub" id="mSub"></p>
+    <ul class="mlist" id="mList"></ul>
+    <button class="btn wide" id="mOk">OK</button>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -572,7 +618,7 @@ const HOME='2026-07-31', INS='2026-09-01';
 const PL={good:['ふつう','#0E9E80'],soft:['やわらかい','#E09400'],loose:['げり','#E5701B'],bad:['血・黒い','#E03A3F']};
 
 const blank=(n,bd)=>({name:n,birthday:bd,vaccine:'2026-08-23',home:HOME,photo:'',days:{},weights:[]});
-let D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],cfg:{url:'',who:''},sent:{},v:7};
+let D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},cfg:{url:'',who:''},sent:{},v:9};
 let calY,calM,selDate=null,editId=null,photoTarget=0;
 
 const $=id=>document.getElementById(id);
@@ -963,21 +1009,26 @@ function paintHist(){
 }
 
 /* ---------- よてい ---------- */
+function ovr(id,def){return (D.ovr&&D.ovr[id])||def}
+function dkey(e){return e.fixed?e.id:('ev-'+e.id)}
+function isDone(k){return !!(D.done&&D.done[k])}
 function autoEvents(){
   const out=[];
   D.dogs.forEach((g,i)=>{
     const c=COLORS[i];
     if(g.vaccine){
-      out.push({date:g.vaccine,title:'混合ワクチン',who:i,color:c,fixed:true,note:'接種後、新しい証明書を保険のマイページに再アップロード'});
-      out.push({date:addD(g.vaccine,14),title:'散歩デビューの目安',who:i,color:c,fixed:true,note:'最後の接種から2週間。それまでは抱っこ散歩で外に慣らす'});
+      out.push({id:`vac-${i}`,src:'vac',date:g.vaccine,title:'混合ワクチン',who:i,color:c,fixed:true,note:'接種後、新しい証明書を保険のマイページに再アップロード'});
+      out.push({id:`walk-${i}`,date:ovr(`walk-${i}`,addD(g.vaccine,14)),title:'散歩デビューの目安',who:i,color:c,fixed:true,note:'最後の接種から2週間。それまでは抱っこ散歩で外に慣らす'});
     }
-    if(g.home) out.push({date:addD(g.home,30),title:'マイクロチップ登録変更 期限',who:i,color:'#C98A00',fixed:true,note:'環境省データベースで飼い主情報を変更（義務）'});
+    if(g.home) out.push({id:`chip-${i}`,date:ovr(`chip-${i}`,addD(g.home,30)),title:'マイクロチップ登録変更 期限',who:i,color:'#C98A00',fixed:true,note:'環境省データベースで飼い主情報を変更（義務）'});
     if(g.birthday){
-      out.push({date:addD(g.birthday,91),title:'狂犬病の注射・犬の登録',who:i,color:'#C98A00',fixed:true,note:'生後91日いこう。ここから30日いないに市区町村へ（義務）'});
-      out.push({date:addM(g.birthday,6),title:'避妊手術の相談',who:i,color:'#6B5CE7',fixed:true,note:'生後6ヶ月ごろ。時期は獣医さんと相談'});
+      out.push({id:`rab-${i}`,date:ovr(`rab-${i}`,addD(g.birthday,91)),title:'狂犬病の注射・犬の登録',who:i,color:'#C98A00',fixed:true,note:'生後91日いこう。ここから30日いないに市区町村へ（義務）'});
+      out.push({id:`spay-${i}`,date:ovr(`spay-${i}`,addM(g.birthday,6)),title:'避妊手術の相談',who:i,color:'#6B5CE7',fixed:true,note:'生後6ヶ月ごろ。時期は獣医さんと相談'});
+      out.push({id:`teeth-${i}`,date:ovr(`teeth-${i}`,addM(g.birthday,4)),title:'永久歯に生えかわり',who:i,color:'#6B5CE7',fixed:true,note:'生後4〜7ヶ月。乳歯が残ると保険の対象外です'});
+      out.push({id:`food-${i}`,date:ovr(`food-${i}`,addM(g.birthday,10)),title:'手作りごはん OK',who:i,color:'#E09400',fixed:true,note:'生後10〜12ヶ月いこう'});
     }
   });
-  out.push({date:INS,title:'保険の補償かいし',who:-1,color:'#0E9E80',fixed:true,note:'それまでは無保険です'});
+  out.push({id:'ins',date:ovr('ins',INS),title:'保険の補償かいし',who:-1,color:'#0E9E80',fixed:true,note:'それまでは無保険です'});
   return out;
 }
 function birthdaysOn(ds){
@@ -1018,7 +1069,7 @@ function paintCal(){
     b.type='button'; b.textContent=c.n;
     if(!c.out){
       const ev=eventsOn(c.ds);
-      if(ev.length) b.innerHTML+=`<span class="dts">${ev.slice(0,3).map(e=>`<i style="background:${e.color}"></i>`).join('')}</span>`;
+      if(ev.length) b.innerHTML+=`<span class="dts">${ev.slice(0,3).map(e=>`<i style="background:${isDone(dkey(e))?'#B9CEE0':e.color}"></i>`).join('')}</span>`;
       b.onclick=()=>{selDate=c.ds;cancelEdit();paintCal();paintEvDay()};
     }else b.disabled=true;
     g.appendChild(b);
@@ -1034,7 +1085,7 @@ function paintEvDay(){
   ev.forEach(e=>{
     const li=document.createElement('li');
     li.innerHTML=`<span class="bar" style="background:${e.color}"></span>
-      <span style="flex:1">${esc(e.title)}${e.note?`<br><span style="font-size:15px;color:var(--soft)">${esc(e.note)}</span>`:''}</span>
+      <span style="flex:1">${isDone(dkey(e))?'✅ ':''}${esc(e.title)}${e.note?`<br><span style="font-size:15px;color:var(--soft)">${esc(e.note)}</span>`:''}</span>
       <span class="tag" style="background:${e.color}">${esc(whoName(e.who))}</span>`;
     if(!e.fixed){
       const ed=document.createElement('button'); ed.className='edit'; ed.type='button'; ed.textContent='✎'; ed.setAttribute('aria-label','編集');
@@ -1073,30 +1124,79 @@ $('evAdd').onclick=()=>{
   paintCal(); paintEvDay(); paintSch();
 };
 
-function paintSch(){
+function setSchDate(it,v){
+  if(!v)return;
+  if(it.src==='user'){const e=D.events.find(x=>x.id===it.evid); if(e)e.date=v;}
+  else if(it.src==='vac'){D.dogs[it.dog].vaccine=v;}
+  else {D.ovr=D.ovr||{}; D.ovr[it.id]=v;}
+  save(); paintCal(); paintEvDay(); paintSch(); profile(); toast('日にちを変えました');
+}
+function schItems(){
   const now=new Date(); now.setHours(0,0,0,0);
-  const yy=now.getFullYear(), bdays=[], extra=[];
+  const yy=now.getFullYear(), list=[];
+  autoEvents().forEach(e=>list.push({
+    id:e.id, src:e.src||'auto', dog:e.who, edit:true,
+    t:e.title+(e.who>=0?`（${D.dogs[e.who].name}）`:''),
+    d:dstr(e.date), ds:e.date, c:e.color, n:e.note, due:e.color==='#C98A00'
+  }));
+  D.events.forEach(e=>list.push({
+    id:'ev-'+e.id, src:'user', evid:e.id, edit:true,
+    t:e.title, d:dstr(e.date), ds:e.date, c:e.who<0?'#6B5CE7':COLORS[e.who], n:whoName(e.who)
+  }));
   D.dogs.forEach((x,i)=>{
     const b=dstr(x.birthday); if(isNaN(b))return;
     for(const Y of [yy,yy+1]){
       const d=new Date(Y,b.getMonth(),b.getDate());
-      if(d>=now){bdays.push({t:`🎂 ${x.name} ${Y-b.getFullYear()}さいの誕生日`,d,c:COLORS[i],n:'毎年'});break;}
+      if(d>=now){list.push({t:`🎂 ${x.name} ${Y-b.getFullYear()}さいの誕生日`,d,c:COLORS[i],n:'毎年',edit:false});break;}
     }
-    extra.push({t:`永久歯に生えかわり（${x.name}）`,d:dstr(addM(x.birthday,4)),c:'#6B5CE7',n:'生後4〜7ヶ月。乳歯が残ると保険の対象外です'});
-    extra.push({t:`手作りごはん OK（${x.name}）`,d:dstr(addM(x.birthday,10)),c:'#E09400',n:'生後10〜12ヶ月いこう'});
   });
-  const list=[
-    ...autoEvents().map(e=>({t:e.title+(e.who>=0?`（${D.dogs[e.who].name}）`:''),d:dstr(e.date),c:e.color,n:e.note,due:e.color==='#C98A00'})),
-    ...D.events.map(e=>({t:e.title,d:dstr(e.date),c:e.who<0?'#6B5CE7':COLORS[e.who],n:whoName(e.who)})),
-    ...bdays,...extra
-  ].filter(i=>!isNaN(i.d)&&i.d>=now).sort((a,b)=>a.d-b.d);
-  if(!list.length){$('sch').innerHTML='<li class="de">これからのよていはありません。</li>';return;}
-  $('sch').innerHTML=list.map(i=>{
-    const dd=Math.round((i.d-now)/86400000);
-    return `<li${i.due?' class="due"':''}><span class="bar" style="background:${i.c}"></span>
-      <div><p class="ti">${esc(i.t)}</p><p class="de">${i.d.getMonth()+1}月${i.d.getDate()}日ごろ ／ ${esc(i.n||'')}</p></div>
-      <div class="cnt">${dd===0?'<b>今日</b>':`<b>${dd}</b>日後`}</div></li>`;
-  }).join('');
+  return list.filter(i=>!isNaN(i.d)&&i.d>=now).sort((a,b)=>a.d-b.d);
+}
+function paintSch(){
+  const now=new Date(); now.setHours(0,0,0,0);
+  const list=schItems();
+  const items2=list;
+  const ul=$('sch'); ul.innerHTML='';
+  if(!items2.length){ul.innerHTML='<li class="de">これからのよていはありません。</li>';return;}
+  items2.forEach(it=>{
+    const dd=Math.round((it.d-now)/86400000);
+    const fin=it.id?isDone(it.id):false;
+    const li=document.createElement('li');
+    if(it.due&&!fin)li.className='due';
+    if(fin)li.classList.add('done');
+    li.innerHTML=`<span class="bar" style="background:${it.c}"></span>
+      <div style="flex:1"><p class="ti">${esc(it.t)}${it.edit?'<span class="pen">✎</span>':''}</p>
+      <p class="de">${it.d.getMonth()+1}月${it.d.getDate()}日ごろ ／ ${esc(it.n||'')}</p></div>
+      <div class="cnt">${fin?'<b>すんだ</b>':(dd===0?'<b>今日</b>':`<b>${dd}</b>日後`)}</div>`;
+    if(it.id){
+      const ck=document.createElement('button');
+      ck.className='schchk'; ck.type='button'; ck.textContent='✓';
+      ck.setAttribute('aria-pressed',fin);
+      ck.setAttribute('aria-label',it.t+(fin?' をもどす':' をすんだことにする'));
+      ck.onclick=ev=>{
+        ev.preventDefault(); ev.stopPropagation();
+        D.done=D.done||{};
+        if(D.done[it.id])delete D.done[it.id]; else D.done[it.id]=todayKey();
+        save(); paintSch(); paintCal(); paintEvDay();
+        if(navigator.vibrate)navigator.vibrate(10);
+      };
+      li.prepend(ck);
+    }
+    if(it.edit){
+      li.classList.add('editable');
+      const inp=document.createElement('input');
+      inp.type='date'; inp.className='dpick'; inp.value=it.ds;
+      inp.setAttribute('aria-label',it.t+' の日にちを変える');
+      inp.onchange=()=>setSchDate(it,inp.value);
+      li.appendChild(inp);
+      if(D.ovr&&D.ovr[it.id]){
+        const u=document.createElement('button'); u.className='undo'; u.type='button'; u.textContent='もとに戻す';
+        u.onclick=ev=>{ev.stopPropagation();delete D.ovr[it.id];save();paintCal();paintEvDay();paintSch()};
+        li.querySelector('.cnt').appendChild(u);
+      }
+    }
+    ul.appendChild(li);
+  });
 }
 
 /* ---------- プロフィール（2匹） ---------- */
@@ -1146,6 +1246,8 @@ $('impIn').onchange=e=>{
       if(!confirm('いまの記録を、読みこんだ内容で置きかえます。よろしいですか？'))return;
       D.dogs=o.dogs.map((x,i)=>({...blank(DEF[i]?DEF[i].n:'なまえ',DEF[i]?DEF[i].b:'2026-05-26'),...x}));
       D.events=Array.isArray(o.events)?o.events:[];
+      D.ovr=o.ovr||{};
+      D.done=o.done||{};
       D.cfg=o.cfg||D.cfg;
       save(); render(); toast('読みこみました');
     }catch(err){ toast('このファイルは読みこめません'); }
@@ -1184,7 +1286,7 @@ $('photoIn').onchange=e=>{
 $('resetBtn').onclick=()=>{
   if(!confirm('2匹ぶんすべての記録・写真・よていを消します。もとに戻せません。'))return;
   const cfg=D.cfg;
-  D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],cfg,sent:{},v:7};
+  D={dogs:[blank(DEF[0].n,DEF[0].b),blank(DEF[1].n,DEF[1].b)],active:0,events:[],ovr:{},done:{},cfg,sent:{},v:9};
   save(); render(); toast('消しました');
 };
 document.querySelectorAll('.tab').forEach(t=>{
@@ -1195,7 +1297,43 @@ document.querySelectorAll('.tab').forEach(t=>{
     window.scrollTo({top:0,behavior:'smooth'});
   };
 });
-document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible'){paintWarn();maybeDaily();} });
+/* ---------- 起動時のおしらせ ---------- */
+let noticeDay='';
+function showNotice(){
+  const now=new Date(); now.setHours(0,0,0,0);
+  const items=schItems().filter(i=>{
+    if(i.id&&isDone(i.id))return false;
+    return Math.round((i.d-now)/86400000)<=7;
+  });
+  const ul=$('mList'); ul.innerHTML='';
+  const n=new Date();
+  $('mSub').textContent=`${n.getMonth()+1}月${n.getDate()}日（${WD[n.getDay()]}）`;
+  if(!items.length){
+    ul.innerHTML='<li class="mnone">この1週間の よていは ありません。<br>きょうも いつもどおりで だいじょうぶです。</li>';
+  }else{
+    items.forEach(it=>{
+      const dd=Math.round((it.d-now)/86400000);
+      const cls=dd===0?'tdy':(dd<=3?'soon':'');
+      const li=document.createElement('li');
+      li.innerHTML=`<span class="bar" style="background:${it.c}"></span>
+        <div style="flex:1"><p class="ti">${esc(it.t)}</p>
+        <p class="de">${it.d.getMonth()+1}月${it.d.getDate()}日 ／ ${esc(it.n||'')}</p></div>
+        <span class="when ${cls}">${dd===0?'きょう':(dd===1?'あした':dd+'日後')}</span>`;
+      ul.appendChild(li);
+    });
+  }
+  noticeDay=todayKey();
+  $('todayModal').classList.remove('hidden');
+}
+$('mOk').onclick=()=>$('todayModal').classList.add('hidden');
+$('todayModal').onclick=e=>{ if(e.target===$('todayModal'))$('todayModal').classList.add('hidden'); };
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'){
+    paintWarn(); maybeDaily();
+    if(noticeDay&&noticeDay!==todayKey()){paintSch();showNotice();}
+  }
+});
 
 function render(){
   paintEvWho();
@@ -1210,12 +1348,15 @@ function render(){
   if(s&&Array.isArray(s.dogs)&&s.dogs.length){
     D.dogs=s.dogs.map((x,i)=>({...blank(DEF[i]?DEF[i].n:'なまえ',DEF[i]?DEF[i].b:'2026-05-26'),...x}));
     D.events=Array.isArray(s.events)?s.events:[];
+    D.ovr=s.ovr||{};
+    D.done=s.done||{};
     D.cfg=Object.assign({url:'',who:''},s.cfg||{});
     D.sent=s.sent||{};
     if((s.v||0)<4){ D.dogs.forEach((g,i)=>{ if(DEF[i]){g.birthday=DEF[i].b;} if(!g.home)g.home=HOME; }); save(); }
   }
   const n=new Date(); calY=n.getFullYear(); calM=n.getMonth(); selDate=todayKey();
   render();
+  showNotice();
   setInterval(()=>{paintWarn();maybeDaily();},600000);
 })();
 </script>
