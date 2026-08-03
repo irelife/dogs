@@ -743,7 +743,7 @@ function dailyTextFor(k){
 }
 function dailyText(){return dailyTextFor(todayKey())}
 let dailyTimer=null;
-const DAILY_HOUR=20, DAILY_WAIT=120000;   // 20時以降、最後の入力から2分後に送信
+const DAILY_HOUR=19, DAILY_WAIT=120000;   // 19時以降、最後の入力から2分後に送信
 
 function dailySent(k){return !!(D.sent&&D.sent[k+'|daily'])}
 function markDaily(k){D.sent[k+'|daily']=1}
