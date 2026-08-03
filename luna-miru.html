@@ -643,7 +643,7 @@ const addD=(s,n)=>{const x=dstr(s);x.setDate(x.getDate()+n);return ymd(x)};
 const addM=(s,n)=>{const x=dstr(s);x.setMonth(x.getMonth()+n);return ymd(x)};
 const dayOf=(g,k)=>{if(!g.days[k])g.days[k]={c:{},poop:null,breath:null,memo:''};return g.days[k]};
 const today=i=>dayOf(D.dogs[i],todayKey());
-const save=()=>store.set(D);
+const save=()=>{store.set(D);touchDaily()};
 const esc=s=>String(s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
 let tt;
 function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)}
@@ -718,8 +718,8 @@ function paintWarn(){
 }
 
 /* ================= 夜のまとめ ================= */
-function dailyText(){
-  const k=todayKey(), [y,m,d]=k.split('-');
+function dailyTextFor(k){
+  const [y,m,d]=k.split('-');
   let s=`🐾 ${Number(m)}月${Number(d)}日の記録\n`;
   D.dogs.forEach(g=>{
     const dd=g.days[k];
@@ -733,13 +733,77 @@ function dailyText(){
     const w=g.weights.find(x=>x.date===k); if(w) s+=`・体重 ${w.g}g\n`;
     if(dd.memo) s+=`・メモ ${dd.memo}\n`;
   });
-  const w=checkups();
-  if(w.length) s+='\n― 気になるところ ―\n'+w.map(x=>'・'+x.t).join('\n');
+  if(k===todayKey()){
+    const w=checkups();
+    if(w.length) s+='\n― 気になるところ ―\n'+w.map(x=>'・'+x.t).join('\n');
+  }else{
+    s+='\n（この日のまとめは、当日に送信できなかったぶんです）';
+  }
   return s;
 }
-function maybeDaily(){
-  if(new Date().getHours()<20)return;
-  once('daily',dailyText(),false);
+function dailyText(){return dailyTextFor(todayKey())}
+let dailyTimer=null;
+const DAILY_HOUR=20, DAILY_WAIT=120000;   // 20時以降、最後の入力から2分後に送信
+
+function dailySent(k){return !!(D.sent&&D.sent[k+'|daily'])}
+function markDaily(k){D.sent[k+'|daily']=1}
+
+/** 入力があるたび呼ばれる。送信タイマーをリセットする */
+function touchDaily(){
+  if(new Date().getHours()<DAILY_HOUR)return;
+  if(dailySent(todayKey()))return;
+  clearTimeout(dailyTimer);
+  dailyTimer=setTimeout(()=>sendDaily(todayKey()),DAILY_WAIT);
+}
+
+function sendDaily(k){
+  if(dailySent(k))return;
+  markDaily(k);
+  Object.keys(D.sent).forEach(x=>{if(x.slice(0,10)<addD(todayKey(),-4))delete D.sent[x]});
+  store.set(D);
+  post(dailyTextFor(k),false);
+}
+
+/** アプリを閉じる／裏に回るときに、まだ送っていなければ即送信 */
+function flushDaily(){
+  if(new Date().getHours()<DAILY_HOUR)return;
+  const k=todayKey();
+  if(dailySent(k))return;
+  clearTimeout(dailyTimer);
+  markDaily(k);
+  store.set(D);
+  beacon(dailyTextFor(k));
+}
+function beacon(text){
+  const url=(D.cfg&&D.cfg.url||'').trim(); if(!url)return;
+  const body=JSON.stringify({text,who:(D.cfg.who||'').trim(),urgent:false,at:new Date().toISOString()});
+  try{
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(url,new Blob([body],{type:'text/plain;charset=utf-8'}));
+      return;
+    }
+  }catch(e){}
+  post(text,false);
+}
+
+function hasRecord(k){
+  return D.dogs.some(g=>{
+    const d=g.days[k];
+    return !!(d&&(doneCount(g,k)||d.poop||d.breath||d.memo)) || g.weights.some(w=>w.date===k);
+  });
+}
+
+/** 開いたときに、送りそびれた過去3日ぶんをまとめて送る */
+function sweepDaily(){
+  const t=todayKey();
+  for(let i=3;i>=1;i--){
+    const k=addD(t,-i);
+    if(dailySent(k))continue;
+    if(hasRecord(k)) sendDaily(k);
+    else markDaily(k);
+  }
+  store.set(D);
+  touchDaily();
 }
 
 /* ================= 表示 ================= */
@@ -1382,11 +1446,14 @@ $('mOk').onclick=()=>$('todayModal').classList.add('hidden');
 $('todayModal').onclick=e=>{ if(e.target===$('todayModal'))$('todayModal').classList.add('hidden'); };
 
 document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden'){flushDaily();return;}
   if(document.visibilityState==='visible'){
-    paintWarn(); maybeDaily();
+    paintWarn(); sweepDaily();
     if(D.notice!==todayKey()){paintSch();showNotice();}
   }
 });
+
+window.addEventListener('pagehide',flushDaily);
 
 function render(){
   paintEvWho();
@@ -1394,7 +1461,7 @@ function render(){
   poops(); memos(); brSetup(); paintBreath();
   wInputs(); paintWeight(); paintHist(); profile();
   $('cfgUrl').value=D.cfg.url||''; $('cfgWho').value=D.cfg.who||'';
-  paintHero(); paintCal(); paintEvDay(); paintSch(); paintHidden(); paintCfg(); paintWarn(); maybeDaily();
+  paintHero(); paintCal(); paintEvDay(); paintSch(); paintHidden(); paintCfg(); paintWarn(); sweepDaily();
 }
 (async()=>{
   const s=await store.get();
@@ -1412,7 +1479,7 @@ function render(){
   const n=new Date(); calY=n.getFullYear(); calM=n.getMonth(); selDate=todayKey();
   render();
   showNotice();
-  setInterval(()=>{paintWarn();maybeDaily();},600000);
+  setInterval(()=>{paintWarn();sweepDaily();},600000);
 })();
 </script>
 </body>
